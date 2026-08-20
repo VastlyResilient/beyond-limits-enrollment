@@ -1062,7 +1062,13 @@ function nextField(){
 /* ---- on voice result ---- */
 function onVoice(e){
   let interim="", final="";
-  for(const res of e.results){ if(res.isFinal) final+=res[0].transcript; else interim+=res[0].transcript; }
+  // Only process NEW results from resultIndex onward — never re-read prior finalized
+  // utterances, which is what caused answers to concatenate ("Bobby" + "Sidhu" = "BobbySidhu").
+  const start = (typeof e.resultIndex === "number") ? e.resultIndex : 0;
+  for(let i=start; i<e.results.length; i++){
+    const res=e.results[i];
+    if(res.isFinal) final+=res[0].transcript; else interim+=res[0].transcript;
+  }
   if(interim){ clearCountdown(); showCaption(esc(interim)+" <em>…</em>", ""); }
   if(final){
     const said=final.trim(); if(!said) return;
