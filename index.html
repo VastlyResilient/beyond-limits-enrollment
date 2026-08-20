@@ -344,7 +344,17 @@ p.lead b{color:var(--ink);font-weight:600}
 .heroGrad p.lead b{color:#FFE36A}
 .heroGrad .mascot{margin-bottom:14px}
 
-</style><div class="bg"><div class="ring"></div></div>
+</style>
+/* AI GUIDE toggle */
+.guide-toggle{display:inline-flex;align-items:center;gap:6px;margin-left:auto;margin-right:6px;border:1px solid rgba(33,49,139,.25);background:rgba(255,255,255,.7);color:var(--navy);font:inherit;font-weight:800;font-size:10.5px;letter-spacing:.1em;padding:7px 12px;border-radius:999px;cursor:pointer;transition:.22s var(--ease)}
+.guide-toggle .gdot{width:8px;height:8px;border-radius:50%;background:#C9CFDE;transition:.22s var(--ease)}
+.guide-toggle:hover{transform:translateY(-1px)}
+.guide-toggle.on{background:linear-gradient(160deg,#2AD39A,var(--green));color:#fff;border-color:var(--green);box-shadow:0 0 0 4px rgba(31,184,135,.18),0 8px 18px -6px rgba(31,184,135,.5)}
+.guide-toggle.on .gdot{background:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.35);animation:pulse 1.4s ease-in-out infinite}
+/* guide narration message style */
+.msg.guide{align-self:flex-start;background:linear-gradient(160deg,rgba(31,184,135,.12),rgba(31,184,135,.06));border:1px solid rgba(31,184,135,.3);border-left:4px solid var(--green)}
+.msg.guide .gtag{display:inline-block;font-size:9px;font-weight:800;letter-spacing:.14em;color:var(--green);background:rgba(31,184,135,.14);padding:2px 8px;border-radius:99px;margin-bottom:6px}
+<div class="bg"><div class="ring"></div></div>
 
 <div class="app">
   <div class="topbar">
@@ -657,6 +667,10 @@ p.lead b{color:var(--ink);font-weight:600}
   <div class="ai-head">
     <div class="avatar"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.8 5.6L19.5 9l-5.7 1.4L12 16l-1.8-5.6L4.5 9l5.7-1.4L12 2zM19 14l.9 2.6 2.6.9-2.6.9L19 21l-.9-2.6-2.6-.9 2.6-.9L19 14z"/></svg></div>
     <div class="tt"><span data-i18n="ai.title">Enrollment Assistant</span><small data-i18n="ai.sub">Here to help — ask me anything</small></div>
+    <button class="guide-toggle" id="guideToggle" title="AI Guide">
+      <span class="glabel" data-i18n="guide.label">AI GUIDE</span>
+      <span class="gdot" id="guideDot"></span>
+    </button>
     <button class="close" id="aiClose">×</button>
   </div>
   <div class="ai-body" id="aiBody"></div>
@@ -1069,6 +1083,67 @@ function cap(s){ return s.charAt(0).toUpperCase()+s.slice(1); }
 function flash(el){ el.style.boxShadow="0 0 0 4px var(--green-glow)"; el.style.borderColor="var(--green)"; setTimeout(()=>{ el.style.boxShadow=""; el.style.borderColor=""; },900); }
 function sayConfirm(){ showCaption("✓ "+(state.lang==="es"?"Entendido":"Got it"),""); clearCaptionSoon(); }
 function voiceOnScreenChange(){ if(micOn) screenPrompt(); }
+
+
+/* ================= AI GUIDE MODE ================= */
+const guideToggle = $("guideToggle");
+let guideOn = false;
+
+const GUIDE_TEXT = {
+  0: { tag:"Step 1 · Welcome", en:"This is the start. Pick <b>English</b> or <b>Español</b> at the top, then tap <b>“Let's begin”</b>. No personal info needed here — it takes about 4 minutes total." },
+  1: { tag:"Step 2 · How it works", en:"Just read the three quick points (tutoring, mentoring, sliding-scale cost). Then choose how you want to answer: <b>Type</b> or <b>Speak</b>. Voice works best in Chrome on a phone. Tap <b>Continue</b>." },
+  2: { tag:"Step 3 · How did you hear?", en:"Pick the one that's true: <b>Beyond Limits Academic Program</b>, <b>Stamford Peace Youth referral</b>, <b>School/community referral</b>, or <b>I'm not sure</b>. If you don't know, choose <b>“I'm not sure”</b> — a real person will sort it out later." },
+  3: { tag:"Step 4 · Your student", en:"Enter the student's <b>first and last name</b>, then tap their <b>grade</b> (4th–10th). This is the child who will get tutoring. If they're between grades, pick the one they'll be in this fall." },
+  4: { tag:"Step 5 · School & city", en:"Start typing the <b>school name</b> — we'll suggest CT schools that match the grade. Pick from the list (it fills the city automatically). If your school isn't listed, just type it and the city/town. Add <b>date of birth</b> in MM/DD/YYYY." },
+  5: { tag:"Step 6 · Your contact", en:"This is <b>your</b> info (parent/guardian). First/last name, phone, and email. We only email your agreement and next steps — nothing else. Double-check the email spelling." },
+  6: { tag:"Step 7 · Optional demographics", en:"These are <b>optional</b> and only shared in aggregate with funders — never tied to your name. Tap a household-income range or <b>“Prefer not to say”</b>, or tap <b>Skip</b> to move on." },
+  7: { tag:"Step 8 · Agreement", en:"Read the short agreement, then check the three boxes (weekly commitment, PowerSchool consent, and that your info is true). Type the <b>student's name</b> and <b>your name</b> as signatures. Then <b>“Send my agreement”</b>." },
+  8: { tag:"Step 9 · Delivery", en:"Enter (or confirm) your email. Tap <b>“Email me the link & QR”</b> to open your mail app with everything pre-filled, or <b>“Copy agreement link”</b>. The QR code also opens the agreement on your phone right now." },
+  9: { tag:"Step 10 · Done", en:"You're finished. A Beyond Limits team member will follow up. If anything looked off, hit <b>Start over</b> or email <a href='mailto:info@beyondlimitsacademics.org' style='color:var(--green);font-weight:700'>info@beyondlimitsacademics.org</a>." }
+};
+const GUIDE_TEXT_ES = {
+  0:{tag:"Paso 1 · Bienvenido",en:"Elige <b>English</b> o <b>Español</b> arriba, luego toca <b>“Empecemos”</b>."},
+  1:{tag:"Paso 2 · Cómo funciona",en:"Lee los tres puntos y elige <b>Escribir</b> o <b>Hablar</b>. Toca <b>Continuar</b>."},
+  2:{tag:"Paso 3 · ¿Cómo te enteraste?",en:"Elige la opción correcta. Si no sabes, toca <b>“No estoy seguro/a”</b>."},
+  3:{tag:"Paso 4 · Tu estudiante",en:"Escribe el <b>nombre y apellido</b> del estudiante y toca su <b>grado</b>."},
+  4:{tag:"Paso 5 · Escuela y ciudad",en:"Escribe el <b>nombre de la escuela</b>; sugeriremos escuelas de CT. Añade la <b>fecha de nacimiento</b>."},
+  5:{tag:"Paso 6 · Tu contacto",en:"Tus datos (padre/tutor). Nombre, teléfono y correo. Revisa que el correo esté bien escrito."},
+  6:{tag:"Paso 7 · Demografía (opcional)",en:"Opcional. Elige un rango de ingreso o <b>“Prefiero no decir”</b>, o toca <b>Omitir</b>."},
+  7:{tag:"Paso 8 · Acuerdo",en:"Lee, marca las tres casillas y escribe las dos firmas. Luego <b>“Enviar mi acuerdo”</b>."},
+  8:{tag:"Paso 9 · Entrega",en:"Confirma tu correo y toca <b>“Envíame el enlace y el QR”</b>, o <b>“Copiar enlace del acuerdo”</b>."},
+  9:{tag:"Paso 10 · Listo",en:"Terminaste. El equipo de Beyond Limits te contactará."}
+};
+
+function guideSay(idx){
+  const src = state.lang==="es"?GUIDE_TEXT_ES:GUIDE_TEXT;
+  const g = src[idx]||src[0];
+  aiMsg(`<span class="gtag">${g.tag}</span><br>${g.en}`,"guide");
+}
+function setGuide(on){
+  guideOn = on;
+  guideToggle.classList.toggle("on",on);
+  if(on){ aiMsg(state.lang==="es"?"<b>Modo Guía activado.</b> Te acompaño paso a paso.":"<b>AI Guide on.</b> I'll walk you through each step.","guide");
+    guideSay(cur); }
+  else { aiMsg(state.lang==="es"?"Modo Guía desactivado.":"AI Guide off.","guide"); }
+}
+guideToggle.addEventListener("click",()=>{ toggleAI(true); setGuide(!guideOn); });
+
+/* hook guide into navigation */
+const _goTo = goTo;
+goTo = function(idx){ _goTo(idx); if(guideOn){ guideSay(cur); } };
+
+/* guide-aware answers: if guide is on and the user asks about the current step, prepend step tip */
+const _aiAnswer = aiAnswer;
+aiAnswer = function(q){
+  const ql=q.toLowerCase();
+  // step-context questions
+  if(/(what do i|what should i|how do i|this step|here|now what|next step|help)/.test(ql)){
+    const src = state.lang==="es"?GUIDE_TEXT_ES:GUIDE_TEXT;
+    const g = src[cur]||src[0];
+    return `<span class="gtag">${g.tag}</span><br>${g.en}<br><br>Anything specific on this step?`;
+  }
+  return _aiAnswer(q);
+};
 
 /* ================= init ================= */
 applyI18n(); updateProgress(); setMode("type");
