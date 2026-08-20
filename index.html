@@ -4,17 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Beyond Limits Academics — Enrollment</title>
-<meta name="description" content="A warm, guided enrollment for Beyond Limits Academics — free one-on-one math & science tutoring for grades 4–10.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fraunces:ital,wght@0,600;0,700;1,600;1,700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --navy:#213B70; --navy-2:#16294A; --navy-soft:#2C5596;
-  --gold:#FDD017; --gold-2:#E0B400; --gold-deep:#8A6E00; --gold-soft:#FFF3C4;
-  --green:#1FA97A; --green-glow:rgba(31,169,122,.55);
+  --navy:#20318B; --navy-2:#16246B; --navy-soft:#2B4FBF;
+  --gold:#FFC400; --gold-2:#F0AC00; --gold-deep:#B27E00; --gold-soft:#FFF3C4;
+  --green:#1FB887; --green-glow:rgba(31,184,135,.55);
   --red:#E0533D; --red-glow:rgba(224,83,61,.5);
-  --ink:#182134; --muted:#5E6A85;
+  --ink:#1B2040; --muted:#5A648A;
+  --acc-blue:#2B4FBF; --acc-sky:#3EA6DF; --acc-purple:#7A5BE6; --acc-teal:#16A88F;
+  --acc-green:#2FA370; --acc-orange:#E26139; --acc-orange2:#E95B2E; --acc-road:#5546C9; --acc-amber:#E8A200;
   --line:rgba(255,255,255,.6);
   --line-soft:rgba(255,255,255,.45);
   --glass:linear-gradient(150deg, rgba(255,255,255,.8), rgba(249,250,253,.62));
@@ -37,9 +35,9 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--gold-2);outline
 
 /* ===== Calm rich backdrop (static: grain + dots + soft washes) ===== */
 .bg{position:fixed;inset:0;z-index:-1;background:
-  radial-gradient(1000px 640px at 88% -12%, rgba(253,208,23,.13), transparent 60%),
-  radial-gradient(760px 720px at -12% 112%, rgba(44,85,150,.12), transparent 62%),
-  linear-gradient(180deg,#F2EFE6 0%, #EAE6DB 100%)}
+  radial-gradient(1100px 700px at 88% -12%, rgba(44,85,150,.16), transparent 62%),
+  radial-gradient(760px 700px at -12% 112%, rgba(253,208,23,.14), transparent 62%),
+  linear-gradient(160deg,#EDF0F7 0%, #E8ECF5 100%)}
 .bg::before{content:'';position:absolute;inset:0;
   background-image:radial-gradient(rgba(33,59,112,.05) 1px, transparent 1px);background-size:24px 24px}
 .bg::after{content:'';position:absolute;inset:0;mix-blend-mode:multiply;opacity:.5;
@@ -312,6 +310,29 @@ p.lead b{color:var(--ink);font-weight:600}
 }
 @media(max-width:420px){.grade-grid{grid-template-columns:repeat(2,1fr)}}
 @media(prefers-reduced-motion:reduce){*{animation-duration:.001s!important;transition-duration:.001s!important}}
+
+/* illustration badge halo */
+.mascot .badgeHalo{fill:rgba(255,255,255,.85) !important;}
+
+/* feature icon colors */
+.opt .ic.fblue{background:rgba(43,79,191,.14);color:var(--acc-blue)}
+.opt .ic.fsky{background:rgba(62,166,223,.16);color:var(--acc-sky)}
+.opt .ic.fpurple{background:rgba(122,91,230,.15);color:var(--acc-purple)}
+.opt .ic.fteal{background:rgba(22,168,143,.15);color:var(--acc-teal)}
+.opt .ic.fgreen{background:rgba(47,163,112,.15);color:var(--acc-green)}
+.opt .ic.forange{background:rgba(226,97,57,.15);color:var(--acc-orange)}
+.opt .ic.froad{background:rgba(85,70,201,.15);color:var(--acc-road)}
+.opt.selected .ic{box-shadow:inset 0 1px 0 rgba(255,255,255,.4)}
+
+/* circular step progress */
+.pstep{display:flex;align-items:center;justify-content:flex-end;gap:8px}
+.stepRing{position:relative;width:26px;height:26px;flex:none}
+.stepRing svg{width:26px;height:26px;transform:rotate(-90deg)}
+.stepRing .bgc{fill:none;stroke:rgba(33,49,139,.15);stroke-width:3}
+.stepRing .fgc{fill:none;stroke:var(--navy);stroke-width:3;stroke-linecap:round;transition:stroke-dashoffset .5s var(--ease)}
+.stepRing .num{position:absolute;inset:0;display:grid;place-items:center;font-size:9px;font-weight:800;color:var(--navy)}
+.pstep .stepTxt{font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+
 </style><div class="bg"><div class="ring"></div></div>
 
 <div class="app">
@@ -339,7 +360,10 @@ p.lead b{color:var(--ink);font-weight:600}
   </div>
 
   <div class="progress"><div class="fill" id="progFill"></div></div>
-  <div class="pstep" id="pstep"></div>
+  <div class="pstep" id="pstep">
+    <div class="stepRing"><svg viewBox="0 0 26 26"><circle class="bgc" cx="13" cy="13" r="11"/><circle class="fgc" id="stepRingFill" cx="13" cy="13" r="11" stroke-dasharray="69.1" stroke-dashoffset="69.1"/></svg><span class="num" id="stepRingNum"></span></div>
+    <span class="stepTxt" id="stepTxt"></span>
+  </div>
 
   <div class="stage">
     <div class="card">
@@ -347,17 +371,19 @@ p.lead b{color:var(--ink);font-weight:600}
       <!-- WELCOME -->
       <section class="screen active" id="s-welcome">
         <div class="mascot q-anim">
-          <svg viewBox="0 0 140 140" fill="none">
+          <svg viewBox="0 0 150 150" fill="none">
+            <circle class="badgeHalo" cx="75" cy="75" r="64"/>
             <g class="book">
-              <path d="M70 42c-14-10-30-12-44-6v60c14-6 30-4 44 6 14-10 30-12 44-6V36c-14-6-30-4-44 6z" fill="#2C5596"/>
-              <path d="M70 42v60" stroke="#16294A" stroke-width="2"/>
-              <path d="M38 52l10 6M38 66l10 6M102 52l-10 6M102 66l-10 6" stroke="#FDD017" stroke-width="2.6" stroke-linecap="round"/>
-              <circle cx="61" cy="62" r="2.6" fill="#FDD017"/><circle cx="79" cy="62" r="2.6" fill="#FDD017"/>
-              <path d="M64 70c2.4 2.6 9.6 2.6 12 0" stroke="#FDD017" stroke-width="2.4" stroke-linecap="round"/>
+              <path d="M75 46c-13-10-29-12-42-6v58c13-6 29-4 42 6 13-10 29-12 42-6V40c-13-6-29-4-42 6z" fill="#2B4FBF"/>
+              <path d="M75 46v58" stroke="#16246B" stroke-width="2"/>
+              <path d="M42 56l9 6M42 69l9 6M108 56l-9 6M108 69l-9 6" stroke="#FFC400" stroke-width="2.6" stroke-linecap="round"/>
+              <circle cx="66" cy="65" r="3" fill="#FFC400"/><circle cx="84" cy="65" r="3" fill="#FFC400"/>
+              <path d="M66 73c2.6 2.8 8.8 2.8 11.4 0" stroke="#FFC400" stroke-width="2.4" stroke-linecap="round"/>
             </g>
-            <text x="20" y="26" font-size="15" fill="#E0B400">π</text>
-            <text x="112" y="46" font-size="14" fill="#2C5596">√</text>
-            <text x="26" y="118" font-size="15" fill="#E0B400">+</text>
+            <text x="20" y="26" font-size="16" fill="#E8A200">π</text>
+            <text x="124" y="46" font-size="15" fill="#2B4FBF">√</text>
+            <text x="24" y="128" font-size="17" fill="#E8A200">+</text>
+            <text x="126" y="120" font-size="15" fill="#2B4FBF">∑</text>
           </svg>
         </div>
         <span class="eyebrow q-anim d1"><span class="dot"></span><span data-i18n="w.eyebrow">Welcome</span></span>
@@ -390,14 +416,14 @@ p.lead b{color:var(--ink);font-weight:600}
         <h1 class="title q-anim d1" data-i18n="how.title">A few gentle questions, then you're done.</h1>
         <p class="lead q-anim d2" data-i18n="how.lead">No paperwork maze. We'll ask who we can help, how to reach you, then walk you through one short agreement.</p>
         <div class="opts q-anim d3" style="margin-bottom:18px">
-          <div class="opt" style="cursor:default;pointer-events:none"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M5 8l7-5 7 5M5 16l7 5 7-5"/></svg></span><span><b data-i18n="how.b1t">One-on-one tutoring</b><small data-i18n="how.b1s">Math & science, grades 4–10</small></span></div>
-          <div class="opt" style="cursor:default;pointer-events:none"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 5-9 5-9-5 9-5zM3 13l9 5 9-5"/></svg></span><span><b data-i18n="how.b2t">Mentoring & confidence</b><small data-i18n="how.b2s">Not just homework — real growth</small></span></div>
-          <div class="opt" style="cursor:default;pointer-events:none"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M5 12l7 7 7-7"/></svg></span><span><b data-i18n="how.b3t">Sliding-scale cost</b><small data-i18n="how.b3s">Little or no cost for eligible families</small></span></div>
+          <div class="opt" style="cursor:default;pointer-events:none"><span class="ic fteal""><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M5 8l7-5 7 5M5 16l7 5 7-5"/></svg></span><span><b data-i18n="how.b1t">One-on-one tutoring</b><small data-i18n="how.b1s">Math & science, grades 4–10</small></span></div>
+          <div class="opt" style="cursor:default;pointer-events:none"><span class="ic fsky""><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 5-9 5-9-5 9-5zM3 13l9 5 9-5"/></svg></span><span><b data-i18n="how.b2t">Mentoring & confidence</b><small data-i18n="how.b2s">Not just homework — real growth</small></span></div>
+          <div class="opt" style="cursor:default;pointer-events:none"><span class="ic fgreen""><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M5 12l7 7 7-7"/></svg></span><span><b data-i18n="how.b3t">Sliding-scale cost</b><small data-i18n="how.b3s">Little or no cost for eligible families</small></span></div>
         </div>
         <div class="field q-anim d4"><label data-i18n="how.mode">How would you like to answer?</label></div>
         <div class="opts cols-2 q-anim d5" id="modeOpts">
-          <button class="opt selected" id="modeType"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg></span><span><b data-i18n="how.typed">Type my answers</b></span><span class="ring"></span></button>
-          <button class="opt" id="modeVoice"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></svg></span><span><b data-i18n="how.voice">Speak my answers</b></span><span class="ring"></span></button>
+          <button class="opt selected" id="modeType"><span class="ic fblue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg></span><span><b data-i18n="how.typed">Type my answers</b></span><span class="ring"></span></button>
+          <button class="opt" id="modeVoice"><span class="ic forange"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></svg></span><span><b data-i18n="how.voice">Speak my answers</b></span><span class="ring"></span></button>
         </div>
         <div class="foot q-anim d6">
           <button class="back" id="howBack"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg><span data-i18n="nav.back">Back</span></button>
@@ -413,10 +439,10 @@ p.lead b{color:var(--ink);font-weight:600}
         <h1 class="title q-anim d1" data-i18n="r.title">How did you hear about us?</h1>
         <p class="lead q-anim d2" data-i18n="r.lead">This helps us match you with the right program and paperwork. No wrong answer.</p>
         <div class="opts q-anim d3" id="routeOpts">
-          <button class="opt" data-route="academic"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 012-2h12a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V5z"/><path d="M8 7h8M8 11h8M8 15h5"/></svg></span><span><b data-i18n="r.a1t">Beyond Limits Academic Program</b></span><span class="ring"></span></button>
-          <button class="opt" data-route="peace"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-5.5-7-11a4 4 0 017-2.6A4 4 0 0119 10c0 5.5-7 11-7 11z"/></svg></span><span><b data-i18n="r.a2t">Stamford Peace Youth referral</b></span><span class="ring"></span></button>
-          <button class="opt" data-route="school"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-4h6v4M9 12h.01M15 12h.01"/></svg></span><span><b data-i18n="r.a3t">School or community referral</b></span><span class="ring"></span></button>
-          <button class="opt" data-route="unsure"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.2 9a2.8 2.8 0 015.6.7c0 1.8-2.6 2.2-2.6 3.8M12 17h.01"/></svg></span><span><b data-i18n="r.a4t">I'm not sure</b></span><span class="ring"></span></button>
+          <button class="opt" data-route="academic"><span class="ic fblue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 012-2h12a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V5z"/><path d="M8 7h8M8 11h8M8 15h5"/></svg></span><span><b data-i18n="r.a1t">Beyond Limits Academic Program</b></span><span class="ring"></span></button>
+          <button class="opt" data-route="peace"><span class="ic fgreen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-5.5-7-11a4 4 0 017-2.6A4 4 0 0119 10c0 5.5-7 11-7 11z"/></svg></span><span><b data-i18n="r.a2t">Stamford Peace Youth referral</b></span><span class="ring"></span></button>
+          <button class="opt" data-route="school"><span class="ic forange"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-4h6v4M9 12h.01M15 12h.01"/></svg></span><span><b data-i18n="r.a3t">School or community referral</b></span><span class="ring"></span></button>
+          <button class="opt" data-route="unsure"><span class="ic fpurple"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.2 9a2.8 2.8 0 015.6.7c0 1.8-2.6 2.2-2.6 3.8M12 17h.01"/></svg></span><span><b data-i18n="r.a4t">I'm not sure</b></span><span class="ring"></span></button>
         </div>
         <div class="echo" id="routeEcho">
           <div class="q" data-i18n="echo.q">Just to make sure we heard you right:</div>
@@ -726,8 +752,12 @@ function goTo(idx){
   voiceOnScreenChange();
 }
 const STEP_NAMES=["Welcome","How it works","Referral","Your student","School","Your contact","Optional","Agreement","Delivery","Done"];
-function updateProgress(){ const pct=Math.round((cur/(screens.length-1))*100); $("progFill").style.width=pct+"%";
-  const s=$("pstep"); if(s) s.textContent="STEP "+(cur+1)+" OF "+screens.length+" — "+STEP_NAMES[cur].toUpperCase(); }
+const RING_C=2*Math.PI*11;
+function updateProgress(){ const pct=(cur/(screens.length-1));
+  const bf=$("progFill"); if(bf) bf.style.width=Math.round(pct*100)+"%";
+  const ring=$("stepRingFill"); if(ring) ring.style.strokeDashoffset=(RING_C*(1-pct)).toFixed(2);
+  const num=$("stepRingNum"); if(num) num.textContent=(cur+1);
+  const txt=$("stepTxt"); if(txt) txt.textContent="OF "+screens.length+" — "+STEP_NAMES[cur].toUpperCase(); }
 
 /* ================= toast ================= */
 let toastT;
