@@ -11,250 +11,241 @@
 <style>
 :root{
   --navy:#213B70; --navy-2:#16294A; --navy-soft:#2C5596;
-  --gold:#FDD017; --gold-2:#E0B400; --gold-soft:#FFF3C4;
-  --cream:#FBF9F2; --paper:#FFFFFF;
-  --ink:#1A2434; --muted:#5A6A85; --line:rgba(33,59,112,.12);
-  --glass:rgba(255,255,255,.62); --glass-strong:rgba(255,255,255,.78);
-  --glass-border:rgba(255,255,255,.7);
-  --shadow:0 24px 60px -18px rgba(22,41,74,.35), 0 6px 18px -6px rgba(22,41,74,.12);
-  --shadow-sm:0 8px 24px -10px rgba(22,41,74,.22);
-  --r-lg:28px; --r-md:20px; --r-sm:14px;
-  --ease:cubic-bezier(.4,0,.2,1);
+  --gold:#FDD017; --gold-2:#E0B400; --gold-soft:#FFF6D6;
+  --bg:#F5F2EA; --card:#FFFFFF; --card2:#FBFAF6;
+  --ink:#1C2434; --muted:#66728A; --line:rgba(33,59,112,.14);
+  --shadow:0 20px 50px -20px rgba(22,41,74,.28), 0 4px 14px -6px rgba(22,41,74,.08);
+  --shadow-sm:0 6px 18px -8px rgba(22,41,74,.18);
+  --r-lg:26px; --r-md:18px; --r-sm:12px;
+  --ease:cubic-bezier(.4,0,.2,1); --ease-spring:cubic-bezier(.34,1.4,.4,1);
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%}
-body{
-  font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
-  color:var(--ink); background:var(--cream); overflow-x:hidden;
-  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
-}
-.serif{font-family:'Fraunces',Georgia,'Times New Roman',serif}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.serif{font-family:'Fraunces',Georgia,serif;font-style:italic}
 
-/* ===== Animated backdrop ===== */
-.backdrop{position:fixed;inset:0;z-index:-1;overflow:hidden;
-  background:
-    radial-gradient(1200px 700px at 12% -8%, rgba(253,208,23,.28), transparent 55%),
-    radial-gradient(1000px 700px at 88% 8%, rgba(44,85,150,.20), transparent 55%),
-    radial-gradient(900px 900px at 50% 118%, rgba(33,59,112,.14), transparent 60%),
-    linear-gradient(180deg,#FFFDF6 0%, #FBF9F2 40%, #F4F1E8 100%);
-}
-.blob{position:absolute;border-radius:50%;filter:blur(70px);opacity:.5;animation:drift 22s var(--ease) infinite alternate}
-.blob.b1{width:420px;height:420px;background:rgba(253,208,23,.35);top:-120px;left:-80px}
-.blob.b2{width:520px;height:520px;background:rgba(44,85,150,.30);top:20%;right:-160px;animation-delay:-8s}
-.blob.b3{width:380px;height:380px;background:rgba(33,59,112,.20);bottom:-120px;left:30%;animation-delay:-14s}
-@keyframes drift{from{transform:translate(0,0) scale(1)}to{transform:translate(40px,-30px) scale(1.08)}}
+/* ===== Calm static background (no motion, no heavy gradients) ===== */
+.bg{position:fixed;inset:0;z-index:-1;background:var(--bg)}
+.bg::before{content:'';position:absolute;inset:0;
+  background-image:radial-gradient(rgba(33,59,112,.05) 1.2px, transparent 1.2px);
+  background-size:26px 26px;}
+.bg::after{content:'';position:absolute;top:-140px;right:-140px;width:480px;height:480px;border-radius:50%;
+  background:radial-gradient(circle,rgba(253,208,23,.14),transparent 65%)}
+.bg .ring{position:absolute;bottom:-160px;left:-160px;width:420px;height:420px;border-radius:50%;
+  background:radial-gradient(circle,rgba(44,85,150,.09),transparent 62%)}
 
-/* floating doodles */
-.doodle{position:fixed;color:rgba(33,59,112,.14);z-index:-1;pointer-events:none;animation:float 9s ease-in-out infinite}
-@keyframes float{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-16px) rotate(3deg)}}
+/* ===== Layout ===== */
+.app{max-width:720px;margin:0 auto;padding:26px 18px 48px;min-height:100vh;display:flex;flex-direction:column}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;padding:0 4px}
+.brand{display:flex;align-items:center;gap:11px}
+.brand .logo{width:42px;height:42px;flex:none}
+.brand .name{font-weight:800;font-size:15px;letter-spacing:-.02em;line-height:1.05;color:var(--navy)}
+.brand .name small{display:block;font-weight:600;font-size:10.5px;color:var(--muted);letter-spacing:.02em}
+.topbar-right{display:flex;align-items:center;gap:9px}
 
-/* ===== App shell ===== */
-.app{max-width:760px;margin:0 auto;padding:28px 20px 40px;min-height:100vh;display:flex;flex-direction:column}
-.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px;padding:0 6px}
-.brand{display:flex;align-items:center;gap:12px}
-.brand .logo{width:44px;height:44px;flex:none}
-.brand .name{font-weight:800;font-size:15px;letter-spacing:-.02em;line-height:1.1;color:var(--navy)}
-.brand .name small{display:block;font-weight:600;font-size:11px;color:var(--muted);letter-spacing:.01em}
-.topbar-right{display:flex;align-items:center;gap:10px}
+/* AI assist button (top right) */
+.ai-btn{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--card);color:var(--navy);
+  font:inherit;font-weight:700;font-size:12.5px;padding:9px 14px;border-radius:999px;cursor:pointer;box-shadow:var(--shadow-sm);
+  transition:all .22s var(--ease)}
+.ai-btn:hover{transform:translateY(-1px);border-color:rgba(33,59,112,.35)}
+.ai-btn.on{background:linear-gradient(180deg,var(--navy-soft),var(--navy));color:#fff;border-color:var(--navy)}
+.ai-btn .spark{width:16px;height:16px;display:grid;place-items:center}
+.ai-btn .spark svg{width:16px;height:16px}
+.ai-btn .dot{width:7px;height:7px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 3px rgba(253,208,23,.3);display:none}
+.ai-btn.on .dot{display:block;animation:pulse 1.6s ease-in-out infinite}
 
-/* language pill */
-.lang{display:flex;background:var(--glass-strong);border:1px solid var(--glass-border);border-radius:999px;padding:3px;backdrop-filter:blur(14px);box-shadow:var(--shadow-sm)}
-.lang button{border:0;background:transparent;font:inherit;font-weight:700;font-size:13px;color:var(--muted);padding:7px 14px;border-radius:999px;cursor:pointer;transition:all .25s var(--ease)}
-.lang button.on{background:var(--navy);color:#fff;box-shadow:0 4px 12px -3px rgba(33,59,112,.5)}
-.lang button:not(.on):hover{color:var(--navy)}
-
-/* help button (logo as launch) */
-.helpbtn{width:44px;height:44px;border-radius:50%;border:1px solid var(--glass-border);background:var(--glass-strong);backdrop-filter:blur(14px);display:grid;place-items:center;cursor:pointer;box-shadow:var(--shadow-sm);transition:transform .2s var(--ease), box-shadow .2s var(--ease)}
-.helpbtn:hover{transform:translateY(-2px) scale(1.04);box-shadow:0 14px 28px -10px rgba(33,59,112,.4)}
-.helpbtn svg{width:22px;height:22px}
+.lang{display:flex;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:3px;box-shadow:var(--shadow-sm)}
+.lang button{border:0;background:transparent;font:inherit;font-weight:700;font-size:12.5px;color:var(--muted);padding:7px 13px;border-radius:999px;cursor:pointer;transition:.22s var(--ease)}
+.lang button.on{background:var(--navy);color:#fff}
 
 /* progress */
-.progress{height:6px;background:rgba(33,59,112,.10);border-radius:999px;overflow:hidden;margin:0 4px 22px;position:relative}
-.progress .fill{height:100%;background:linear-gradient(90deg,var(--navy),var(--gold));border-radius:999px;width:0%;transition:width .55s var(--ease)}
-.progress .pct{position:absolute;right:0;top:-22px;font-size:11px;font-weight:700;color:var(--muted)}
+.progress{height:6px;background:rgba(33,59,112,.1);border-radius:99px;overflow:hidden;margin:0 2px 20px;position:relative}
+.progress .fill{height:100%;background:linear-gradient(90deg,var(--navy),var(--gold));border-radius:99px;width:0%;transition:width .5s var(--ease)}
 
-/* ===== Screen card ===== */
-.stage{display:flex;flex:1;align-items:center;justify-content:center}
-.card{
-  width:100%;background:var(--glass);backdrop-filter:blur(26px) saturate(150%);-webkit-backdrop-filter:blur(26px) saturate(150%);
-  border:1px solid var(--glass-border);border-radius:var(--r-lg);box-shadow:var(--shadow);
-  padding:40px 40px 36px;position:relative;overflow:hidden;
-}
-.card::before{content:'';position:absolute;inset:0;border-radius:var(--r-lg);padding:1px;background:linear-gradient(140deg,rgba(255,255,255,.9),rgba(255,255,255,.15) 40%,rgba(253,208,23,.28));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
-
+/* ===== Card & question-by-question animation ===== */
+.stage{flex:1;display:flex;align-items:flex-start;justify-content:center}
+.card{width:100%;background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow);padding:36px 34px 30px;position:relative}
 .screen{display:none}
-.screen.active{display:block;animation:enter .45s var(--ease)}
-.screen.exit{animation:leave .32s var(--ease) forwards}
-@keyframes enter{from{opacity:0;transform:translateX(44px)}to{opacity:1;transform:none}}
-@keyframes leave{from{opacity:1;transform:none}to{opacity:0;transform:translateX(-44px)}}
+.screen.active{display:block}
+.screen.anim-in .q-anim{animation:qin .5s var(--ease) backwards}
+@keyframes qin{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+.screen.anim-in .q-anim.d1{animation-delay:.04s}.screen.anim-in .q-anim.d2{animation-delay:.12s}
+.screen.anim-in .q-anim.d3{animation-delay:.2s}.screen.anim-in .q-anim.d4{animation-delay:.28s}
+.screen.anim-in .q-anim.d5{animation-delay:.36s}.screen.anim-in .q-anim.d6{animation-delay:.44s}
 
-.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-2);background:rgba(253,208,23,.14);padding:6px 12px;border-radius:999px;margin-bottom:18px}
-.eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--gold)}
-h1.title{font-size:clamp(26px,4.4vw,34px);font-weight:800;letter-spacing:-.03em;line-height:1.12;color:var(--navy);margin-bottom:12px}
-h1.title .serif{font-style:italic;color:var(--navy)}
-p.lead{font-size:16px;line-height:1.6;color:var(--muted);margin-bottom:26px}
+.eyebrow{display:inline-flex;align-items:center;gap:7px;font-size:11.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-2);background:var(--gold-soft);padding:6px 12px;border-radius:99px;margin-bottom:16px}
+.eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--gold-2)}
+h1.title{font-size:clamp(25px,4vw,31px);font-weight:800;letter-spacing:-.03em;line-height:1.14;color:var(--navy);margin-bottom:10px}
+p.lead{font-size:15.5px;line-height:1.6;color:var(--muted);margin-bottom:24px}
 p.lead b{color:var(--ink);font-weight:600}
 
 /* ===== Buttons ===== */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;border:0;cursor:pointer;font:inherit;
-  font-weight:700;font-size:15.5px;padding:15px 26px;border-radius:16px;transition:all .22s var(--ease);white-space:nowrap}
-.btn-primary{background:linear-gradient(180deg,var(--navy-soft),var(--navy));color:#fff;box-shadow:0 12px 26px -10px rgba(33,59,112,.55)}
-.btn-primary:hover{transform:translateY(-2px);box-shadow:0 18px 34px -10px rgba(33,59,112,.6)}
-.btn-primary:active{transform:translateY(0) scale(.98)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;cursor:pointer;font:inherit;font-weight:700;font-size:15px;padding:15px 24px;border-radius:15px;transition:all .2s var(--ease);white-space:nowrap}
+.btn-primary{background:linear-gradient(180deg,var(--navy-soft),var(--navy));color:#fff;box-shadow:0 12px 26px -12px rgba(33,59,112,.6)}
+.btn-primary:hover{transform:translateY(-2px)}
+.btn-primary:active{transform:scale(.98)}
 .btn-primary:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
-.btn-gold{background:linear-gradient(180deg,#FFE35A,var(--gold-2));color:var(--navy);box-shadow:0 12px 26px -10px rgba(224,180,0,.55)}
+.btn-gold{background:linear-gradient(180deg,#FFE35A,var(--gold-2));color:var(--navy)}
 .btn-gold:hover{transform:translateY(-2px)}
-.btn-ghost{background:rgba(255,255,255,.6);border:1px solid var(--line);color:var(--navy)}
+.btn-ghost{background:var(--card2);border:1px solid var(--line);color:var(--navy)}
 .btn-ghost:hover{background:#fff;border-color:rgba(33,59,112,.3)}
 .btn-block{width:100%}
 .btn svg{width:18px;height:18px;flex:none}
-.foot{display:flex;align-items:center;gap:12px;margin-top:30px}
-.foot .back{display:inline-flex;align-items:center;gap:6px;background:none;border:0;font:inherit;font-weight:600;font-size:14px;color:var(--muted);cursor:pointer;padding:10px 14px;border-radius:12px;transition:.2s var(--ease)}
-.foot .back:hover{color:var(--navy);background:rgba(33,59,112,.06)}
+.foot{display:flex;align-items:center;gap:12px;margin-top:28px}
+.foot .back{display:inline-flex;align-items:center;gap:6px;background:none;border:0;font:inherit;font-weight:600;font-size:14px;color:var(--muted);cursor:pointer;padding:10px 12px;border-radius:11px;transition:.2s var(--ease)}
+.foot .back:hover{color:var(--navy);background:rgba(33,59,112,.07)}
 .foot .spacer{flex:1}
-.step-hint{font-size:12px;font-weight:600;color:var(--muted)}
 
-/* ===== Option tiles (routing + choices) ===== */
-.opts{display:grid;gap:12px;margin-bottom:8px}
+/* ===== Options ===== */
+.opts{display:grid;gap:11px}
 .opts.cols-2{grid-template-columns:1fr 1fr}
 .opts.cols-3{grid-template-columns:repeat(3,1fr)}
-.opt{position:relative;display:flex;align-items:center;gap:14px;text-align:left;width:100%;cursor:pointer;
-  background:rgba(255,255,255,.6);border:1.5px solid var(--line);border-radius:var(--r-md);padding:16px 18px;
-  font:inherit;font-weight:600;font-size:15px;color:var(--ink);transition:all .22s var(--ease)}
+.opts.cols-4{grid-template-columns:repeat(4,1fr)}
+.opt{position:relative;display:flex;align-items:center;gap:13px;text-align:left;width:100%;cursor:pointer;background:var(--card2);
+  border:1.5px solid var(--line);border-radius:var(--r-md);padding:15px 17px;font:inherit;font-weight:600;font-size:15px;color:var(--ink);transition:all .2s var(--ease)}
 .opt:hover{transform:translateY(-2px);border-color:rgba(33,59,112,.35);box-shadow:var(--shadow-sm)}
-.opt .ic{width:40px;height:40px;flex:none;border-radius:12px;display:grid;place-items:center;background:rgba(33,59,112,.07);color:var(--navy);transition:.22s var(--ease)}
+.opt .ic{width:40px;height:40px;flex:none;border-radius:12px;display:grid;place-items:center;background:rgba(33,59,112,.08);color:var(--navy);transition:.2s var(--ease)}
 .opt .ic svg{width:22px;height:22px}
-.opt .ring{width:22px;height:22px;flex:none;border-radius:50%;border:2px solid rgba(33,59,112,.25);display:grid;place-items:center;transition:.25s var(--ease);margin-left:auto}
-.opt .ring::after{content:'';width:12px;height:12px;border-radius:50%;background:var(--navy);transform:scale(0);transition:transform .28s var(--ease)}
-.opt.selected{border-color:var(--navy);background:rgba(33,59,112,.06);box-shadow:0 8px 20px -8px rgba(33,59,112,.3)}
+.opt .ring{width:22px;height:22px;flex:none;border-radius:50%;border:2px solid rgba(33,59,112,.25);display:grid;place-items:center;margin-left:auto;transition:.22s var(--ease)}
+.opt .ring::after{content:'';width:12px;height:12px;border-radius:50%;background:var(--navy);transform:scale(0);transition:transform .26s var(--ease-spring)}
+.opt.selected{border-color:var(--navy);background:rgba(33,59,112,.05);box-shadow:0 8px 20px -10px rgba(33,59,112,.3)}
 .opt.selected .ring{border-color:var(--navy)}
 .opt.selected .ring::after{transform:scale(1)}
 .opt.selected .ic{background:var(--navy);color:var(--gold)}
+.opt small{display:block;font-weight:500;font-size:12.5px;color:var(--muted);margin-top:1px}
 
-/* compact icon tiles (grade, race, etc) */
-.tile{position:relative;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;text-align:center;
-  background:rgba(255,255,255,.6);border:1.5px solid var(--line);border-radius:var(--r-md);padding:16px 10px;
-  font:inherit;font-weight:600;font-size:13.5px;color:var(--ink);transition:all .22s var(--ease)}
+/* grade tiles */
+.tile{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;
+  background:var(--card2);border:1.5px solid var(--line);border-radius:var(--r-md);padding:14px 6px;font:inherit;font-weight:700;font-size:16px;color:var(--navy);transition:all .2s var(--ease)}
+.tile small{font-size:10.5px;font-weight:600;color:var(--muted)}
 .tile:hover{transform:translateY(-2px);border-color:rgba(33,59,112,.35);box-shadow:var(--shadow-sm)}
 .tile.selected{border-color:var(--navy);background:rgba(33,59,112,.06)}
-.tile .tic{width:22px;height:22px;border-radius:50%;border:2px solid rgba(33,59,112,.25);display:grid;place-items:center;position:absolute;top:10px;right:10px;transition:.25s var(--ease)}
-.tile .tic::after{content:'';width:11px;height:11px;border-radius:50%;background:var(--navy);transform:scale(0);transition:.28s var(--ease)}
+.tile .tic{width:18px;height:18px;border-radius:50%;border:2px solid rgba(33,59,112,.25);position:absolute;top:8px;right:8px;display:grid;place-items:center;transition:.22s var(--ease)}
+.tile .tic::after{content:'';width:9px;height:9px;border-radius:50%;background:var(--navy);transform:scale(0);transition:.26s var(--ease-spring)}
 .tile.selected .tic{border-color:var(--navy)}
 .tile.selected .tic::after{transform:scale(1)}
-.tile .ti{width:30px;height:30px;color:var(--navy);margin-top:2px}
-.tile .ti svg{width:30px;height:30px}
 
-/* ===== Inputs ===== */
-.field{margin-bottom:16px}
+/* ===== Inputs + autofill ===== */
+.field{margin-bottom:16px;position:relative}
 .field label{display:block;font-size:13px;font-weight:700;color:var(--navy);margin-bottom:7px}
-.field .hint{font-weight:500;color:var(--muted);font-size:12px;margin-left:4px}
-.input{width:100%;font:inherit;font-size:15.5px;color:var(--ink);background:rgba(255,255,255,.75);border:1.5px solid var(--line);
-  border-radius:14px;padding:14px 16px;transition:border-color .2s var(--ease), box-shadow .2s var(--ease);outline:none}
-.input:focus{border-color:var(--navy);box-shadow:0 0 0 4px rgba(33,59,112,.12);background:#fff}
-.input::placeholder{color:#a8b3c6}
+.field .hint{font-weight:500;color:var(--muted);font-size:12px}
+.input{width:100%;font:inherit;font-size:15.5px;color:var(--ink);background:var(--card2);border:1.5px solid var(--line);border-radius:14px;padding:14px 16px;outline:none;transition:border-color .2s var(--ease),box-shadow .2s var(--ease)}
+.input:focus{border-color:var(--navy);box-shadow:0 0 0 4px rgba(33,59,112,.1);background:#fff}
+.input::placeholder{color:#AEB8C9}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 
-/* voice button */
-.voice{display:flex;align-items:center;gap:10px;justify-content:center;width:100%;padding:15px;border-radius:16px;
-  border:1.5px dashed rgba(33,59,112,.35);background:rgba(33,59,112,.04);color:var(--navy);font:inherit;font-weight:700;font-size:14.5px;cursor:pointer;transition:.22s var(--ease)}
-.voice:hover{background:rgba(33,59,112,.09)}
-.voice.recording{border-color:var(--gold-2);background:rgba(253,208,23,.16);animation:pulse 1.2s ease-in-out infinite}
-@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(224,180,0,.4)}50%{box-shadow:0 0 0 10px rgba(224,180,0,0)}}
+/* suggestion dropdown */
+.suggest{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:40;background:#fff;border:1px solid var(--line);border-radius:14px;
+  box-shadow:0 20px 44px -14px rgba(22,41,74,.3);overflow:hidden;display:none;max-height:264px;overflow-y:auto}
+.suggest.open{display:block;animation:pop .18s var(--ease)}
+@keyframes pop{from{opacity:0;transform:translateY(-6px) scale(.98)}to{opacity:1;transform:none}}
+.suggest .sg{display:flex;align-items:center;gap:11px;width:100%;text-align:left;padding:12px 15px;background:none;border:0;cursor:pointer;font:inherit;font-size:14.5px;color:var(--ink);border-bottom:1px solid rgba(33,59,112,.06);transition:background .12s}
+.suggest .sg:last-child{border-bottom:0}
+.suggest .sg:hover,.suggest .sg.hl{background:rgba(33,59,112,.06)}
+.suggest .sg .sic{width:32px;height:32px;flex:none;border-radius:9px;display:grid;place-items:center;background:rgba(33,59,112,.07);color:var(--navy)}
+.suggest .sg .sic svg{width:18px;height:18px}
+.suggest .sg b{font-weight:700}
+.suggest .sg small{display:block;font-size:12px;color:var(--muted);font-weight:500}
+.suggest .sg .kbd{margin-left:auto;font-size:11px;color:var(--muted);background:var(--card2);border:1px solid var(--line);border-radius:6px;padding:2px 7px}
+.suggest .sg-none{padding:12px 15px;font-size:13.5px;color:var(--muted)}
+
+/* voice */
+.voice{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:14px;border-radius:15px;border:1.5px dashed rgba(33,59,112,.35);background:rgba(33,59,112,.04);color:var(--navy);font:inherit;font-weight:700;font-size:14.5px;cursor:pointer;transition:.2s var(--ease)}
+.voice:hover{background:rgba(33,59,112,.08)}
+.voice.recording{border-color:var(--gold-2);background:var(--gold-soft);animation:pulse 1.2s ease-in-out infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(224,180,0,.4)}50%{box-shadow:0 0 0 9px rgba(224,180,0,0)}}
 .voice svg{width:20px;height:20px}
 
 /* echo confirm */
-.echo{background:rgba(253,208,23,.14);border:1px solid rgba(224,180,0,.4);border-radius:16px;padding:16px 18px;margin:14px 0;display:none}
-.echo.show{display:block;animation:enter .3s var(--ease)}
-.echo .q{font-weight:700;color:var(--navy);font-size:14px;margin-bottom:6px}
-.echo .heard{font-size:16px;font-weight:600;color:var(--ink);font-style:italic;padding:10px 14px;background:#fff;border-radius:10px;margin:8px 0 12px}
-.echo .acts{display:flex;gap:10px}
+.echo{background:var(--gold-soft);border:1px solid rgba(224,180,0,.5);border-radius:15px;padding:15px 17px;margin-top:14px;display:none}
+.echo.show{display:block;animation:pop .25s var(--ease)}
+.echo .q{font-weight:700;color:var(--navy);font-size:13.5px}
+.echo .heard{font-size:15.5px;font-weight:600;font-style:italic;background:#fff;border-radius:10px;padding:10px 13px;margin:8px 0 12px}
+.echo .acts{display:flex;gap:9px}
 
-/* ===== Agreement panel ===== */
-.agree-scroll{max-height:340px;overflow-y:auto;padding-right:6px;margin-bottom:18px}
+/* agreement */
+.agree-scroll{max-height:300px;overflow-y:auto;padding-right:6px;margin-bottom:16px}
 .agree-scroll::-webkit-scrollbar{width:8px}
 .agree-scroll::-webkit-scrollbar-thumb{background:rgba(33,59,112,.2);border-radius:99px}
-.agree-box{background:rgba(255,255,255,.7);border:1px solid var(--line);border-radius:16px;padding:22px 22px;font-size:14px;line-height:1.65;color:#34435F}
-.agree-box h4{color:var(--navy);font-size:15px;margin:16px 0 6px;letter-spacing:-.01em}
+.agree-box{background:var(--card2);border:1px solid var(--line);border-radius:15px;padding:20px;font-size:14px;line-height:1.65;color:#3A4763}
+.agree-box h4{color:var(--navy);font-size:14.5px;margin:15px 0 5px}
 .agree-box h4:first-child{margin-top:0}
 .agree-box ul{margin:6px 0 6px 18px}
-.agree-box li{margin:4px 0}
-.agree-box .legal-note{display:block;margin-top:16px;font-size:12px;color:var(--muted);font-style:italic;border-top:1px dashed var(--line);padding-top:12px}
-.check-row{display:flex;gap:12px;align-items:flex-start;padding:14px 0;border-top:1px solid var(--line)}
+.agree-box li{margin:3px 0}
+.agree-box .legal-note{display:block;margin-top:14px;font-size:12px;color:var(--muted);font-style:italic;border-top:1px dashed var(--line);padding-top:11px}
+.check-row{display:flex;gap:12px;align-items:flex-start;padding:13px 0;border-top:1px solid var(--line);cursor:pointer}
 .check-row:first-of-type{border-top:0}
-.check-row .cb{flex:none;width:24px;height:24px;border-radius:8px;border:2px solid rgba(33,59,112,.3);display:grid;place-items:center;cursor:pointer;transition:.22s var(--ease);margin-top:1px}
-.check-row .cb svg{width:16px;height:16px;color:#fff;opacity:0;transform:scale(.5);transition:.22s var(--ease)}
+.check-row .cb{flex:none;width:24px;height:24px;border-radius:8px;border:2px solid rgba(33,59,112,.3);display:grid;place-items:center;margin-top:1px;transition:.2s var(--ease)}
+.check-row .cb svg{width:16px;height:16px;color:#fff;opacity:0;transform:scale(.5);transition:.2s var(--ease)}
 .check-row.on .cb{background:var(--navy);border-color:var(--navy)}
 .check-row.on .cb svg{opacity:1;transform:scale(1)}
-.check-row .txt{font-size:14px;line-height:1.5;color:#34435F}
+.check-row .txt{font-size:14px;line-height:1.5;color:#3A4763}
 .check-row .txt b{color:var(--ink)}
+.sig{font-family:'Fraunces',Georgia,serif;font-style:italic;font-size:19px;color:var(--navy)}
 
-/* signature */
-.sig{font-family:'Fraunces',Georgia,serif;font-size:20px;font-style:italic;color:var(--navy)}
+/* delivery */
+.deliver{display:grid;grid-template-columns:1fr auto;gap:20px;align-items:center}
+.qr-wrap{background:#fff;border:1px solid var(--line);border-radius:17px;padding:13px;box-shadow:var(--shadow-sm);display:grid;place-items:center}
+.qr-wrap svg{width:146px;height:146px;display:block}
+.qr-wrap .lbl{font-size:11px;font-weight:700;color:var(--muted);margin-top:7px;text-align:center}
 
-/* ===== Delivery / QR ===== */
-.deliver{display:grid;grid-template-columns:1fr auto;gap:22px;align-items:center}
-.qr-wrap{background:#fff;border-radius:18px;padding:14px;box-shadow:var(--shadow-sm);border:1px solid var(--line);display:grid;place-items:center}
-.qr-wrap svg{width:150px;height:150px;display:block}
-.qr-wrap .lbl{font-size:11px;font-weight:700;color:var(--muted);margin-top:8px;text-align:center}
-.email-preview{font-size:15px;font-weight:600;color:var(--navy);background:rgba(255,255,255,.7);border:1px dashed var(--line);border-radius:12px;padding:12px 14px;margin:8px 0 14px}
-.copy{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:600;color:var(--navy);background:none;border:0;cursor:pointer;padding:6px 10px;border-radius:8px;transition:.2s var(--ease)}
-.copy:hover{background:rgba(33,59,112,.08)}
-.copy svg{width:15px;height:15px}
-
-/* ===== Mascot ===== */
-.mascot{display:grid;place-items:center;margin:6px 0 22px}
-.mascot svg{width:130px;height:130px;filter:drop-shadow(0 14px 22px rgba(33,59,112,.22))}
+/* mascot */
+.mascot{display:grid;place-items:center;margin:2px 0 18px}
+.mascot svg{width:120px;height:120px;filter:drop-shadow(0 12px 20px rgba(33,59,112,.2))}
 .mascot .book{animation:bob 5s ease-in-out infinite}
-.mascot .page-l{animation:flip 5s ease-in-out infinite;transform-origin:left center}
-@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
-@keyframes flip{0%,100%{transform:rotate(0)}50%{transform:rotate(-6deg)}}
-.orbit{position:relative}
-.spark{position:absolute;animation:orbit-spin 14s linear infinite}
-.spark.s1{top:-8px;left:6px;animation-duration:13s}
-.spark.s2{top:30px;right:-4px;animation-duration:17s;animation-delay:-6s}
-.spark.s3{bottom:-4px;left:14px;animation-duration:15s;animation-delay:-10s}
-@keyframes orbit-spin{0%{transform:rotate(0) translateX(8px) rotate(0)}100%{transform:rotate(360deg) translateX(8px) rotate(-360deg)}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 
-/* ===== Help sheet ===== */
-.sheet{position:fixed;right:20px;bottom:20px;width:320px;max-width:88vw;z-index:50;background:var(--glass-strong);
-  backdrop-filter:blur(24px);border:1px solid var(--glass-border);border-radius:22px;box-shadow:var(--shadow);
-  padding:20px;transform:translateY(30px);opacity:0;pointer-events:none;transition:.32s var(--ease)}
-.sheet.open{transform:none;opacity:1;pointer-events:auto}
-.sheet h4{color:var(--navy);font-size:15px;margin-bottom:8px}
-.sheet p{font-size:13.5px;line-height:1.55;color:var(--muted);margin-bottom:10px}
-.sheet a{color:var(--navy);font-weight:700;text-decoration:none}
-.sheet .close{position:absolute;top:14px;right:14px;background:none;border:0;font-size:20px;color:var(--muted);cursor:pointer}
+/* ===== AI assistant drawer ===== */
+.ai-drawer{position:fixed;top:0;right:0;height:100vh;width:360px;max-width:92vw;z-index:70;background:#fff;box-shadow:-24px 0 60px -20px rgba(22,41,74,.35);
+  transform:translateX(105%);transition:transform .38s var(--ease);display:flex;flex-direction:column;border-left:1px solid var(--line)}
+.ai-drawer.open{transform:none}
+.ai-head{display:flex;align-items:center;gap:11px;padding:18px 18px 14px;border-bottom:1px solid var(--line)}
+.ai-head .avatar{width:38px;height:38px;flex:none;border-radius:50%;background:linear-gradient(135deg,var(--navy),var(--navy-soft));display:grid;place-items:center;color:var(--gold)}
+.ai-head .avatar svg{width:20px;height:20px}
+.ai-head .tt{font-weight:800;font-size:15px;color:var(--navy)}
+.ai-head .tt small{display:block;font-weight:600;font-size:11px;color:var(--muted)}
+.ai-head .close{margin-left:auto;background:none;border:0;font-size:24px;color:var(--muted);cursor:pointer;line-height:1}
+.ai-body{flex:1;overflow-y:auto;padding:16px 16px 8px;display:flex;flex-direction:column;gap:11px}
+.msg{max-width:86%;padding:11px 14px;border-radius:16px;font-size:14px;line-height:1.5;animation:pop .22s var(--ease)}
+.msg.bot{align-self:flex-start;background:var(--card2);border:1px solid var(--line);border-bottom-left-radius:5px;color:var(--ink)}
+.msg.user{align-self:flex-end;background:var(--navy);color:#fff;border-bottom-right-radius:5px}
+.msg.bot b{color:var(--navy)}
+.typing{align-self:flex-start;display:flex;gap:5px;padding:12px 15px;background:var(--card2);border:1px solid var(--line);border-radius:16px;border-bottom-left-radius:5px}
+.typing span{width:7px;height:7px;border-radius:50%;background:var(--muted);animation:blink 1.2s infinite}
+.typing span:nth-child(2){animation-delay:.15s}.typing span:nth-child(3){animation-delay:.3s}
+@keyframes blink{0%,80%,100%{opacity:.3}40%{opacity:1}}
+.ai-chips{display:flex;flex-wrap:wrap;gap:7px;padding:0 16px 10px}
+.ai-chips button{font:inherit;font-size:12.5px;font-weight:600;color:var(--navy);background:var(--gold-soft);border:1px solid rgba(224,180,0,.4);border-radius:99px;padding:7px 12px;cursor:pointer;transition:.18s}
+.ai-chips button:hover{background:#FFE9A8}
+.ai-input{display:flex;gap:9px;padding:13px 14px;border-top:1px solid var(--line);background:#fff}
+.ai-input input{flex:1;font:inherit;font-size:14.5px;border:1.5px solid var(--line);border-radius:12px;padding:12px 13px;outline:none}
+.ai-input input:focus{border-color:var(--navy)}
+.ai-input button{flex:none;width:46px;height:46px;border:0;border-radius:12px;background:var(--navy);color:#fff;display:grid;place-items:center;cursor:pointer;transition:.18s}
+.ai-input button:hover{background:var(--navy-soft)}
+.ai-input button svg{width:20px;height:20px}
+.ai-overlay{position:fixed;inset:0;z-index:65;background:rgba(22,41,74,.35);backdrop-filter:blur(2px);opacity:0;pointer-events:none;transition:opacity .3s}
+.ai-overlay.show{opacity:1;pointer-events:auto}
 
-/* ===== Toast ===== */
-.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(20px);background:var(--navy);color:#fff;
-  font-size:14px;font-weight:600;padding:12px 20px;border-radius:14px;box-shadow:var(--shadow);opacity:0;pointer-events:none;
-  transition:.3s var(--ease);z-index:60}
+/* toast */
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:var(--navy);color:#fff;font-size:14px;font-weight:600;padding:12px 20px;border-radius:13px;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:.3s var(--ease);z-index:80}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-/* ===== Responsive ===== */
 @media(max-width:600px){
-  .app{padding:18px 12px 32px}
-  .card{padding:28px 20px 26px;border-radius:22px}
-  .opts.cols-3{grid-template-columns:1fr 1fr}
-  .opts.cols-2{grid-template-columns:1fr}
+  .app{padding:16px 12px 36px}
+  .card{padding:26px 20px 24px;border-radius:20px}
+  .opts.cols-2,.opts.cols-3,.opts.cols-4{grid-template-columns:1fr 1fr}
+  .opts.cols-4{grid-template-columns:repeat(4,1fr)}
   .row2{grid-template-columns:1fr}
   .deliver{grid-template-columns:1fr;text-align:center}
   .deliver .qr-wrap{margin:0 auto}
-  .brand .name small{display:none}
-  .foot{flex-wrap:wrap}
+  .ai-btn .lbl{display:none}
+  .ai-btn{padding:9px 11px}
 }
-@media(prefers-reduced-motion:reduce){
-  *{animation-duration:.001s !important;transition-duration:.001s !important}
-}
-</style><!-- ===== Animated backdrop ===== -->
-<div class="backdrop"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
-<svg class="doodle" style="top:16%;left:6%;width:60px;height:60px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3v18M3 12h18"/></svg>
-<svg class="doodle" style="top:26%;right:8%;width:46px;height:46px;animation-delay:-3s" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12l4-6 12 12-4 2zM4 12l3-2"/></svg>
-<svg class="doodle" style="bottom:18%;left:10%;width:40px;height:40px;animation-delay:-6s" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="8"/><ellipse cx="12" cy="12" rx="2.6" ry="8"/></svg>
-<svg class="doodle" style="bottom:12%;right:12%;width:52px;height:52px;animation-delay:-1s" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 3l14 8-14 8V3z"/></svg>
+@media(max-width:420px){.opts.cols-4{grid-template-columns:repeat(3,1fr)}}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.001s!important;transition-duration:.001s!important}}
+</style><div class="bg"><div class="ring"></div></div>
 
 <div class="app">
-  <!-- ===== Top bar ===== -->
   <div class="topbar">
     <div class="brand">
       <svg class="logo" viewBox="0 0 48 48" fill="none">
@@ -270,58 +261,52 @@ p.lead b{color:var(--ink);font-weight:600}
         <button data-lang="en" class="on">EN</button>
         <button data-lang="es">ES</button>
       </div>
-      <button class="helpbtn" id="helpBtn" aria-label="Help">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M9.2 9a2.8 2.8 0 015.6.7c0 1.8-2.6 2.2-2.6 3.8M12 17h.01"/></svg>
+      <button class="ai-btn" id="aiToggle" aria-label="AI Assist">
+        <span class="spark"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.8 5.6L19.5 9l-5.7 1.4L12 16l-1.8-5.6L4.5 9l5.7-1.4L12 2zM19 14l.9 2.6 2.6.9-2.6.9L19 21l-.9-2.6-2.6-.9 2.6-.9L19 14z"/></svg></span>
+        <span class="lbl" data-i18n="ai.label">AI Assist</span>
+        <span class="dot"></span>
       </button>
     </div>
   </div>
 
-  <!-- ===== Progress ===== -->
-  <div class="progress"><div class="fill" id="progFill"></div><span class="pct" id="progPct"></span></div>
+  <div class="progress"><div class="fill" id="progFill"></div></div>
 
-  <!-- ===== Screens ===== -->
   <div class="stage">
     <div class="card">
 
-      <!-- SCREEN 0 : WELCOME -->
+      <!-- WELCOME -->
       <section class="screen active" id="s-welcome">
-        <div class="mascot">
+        <div class="mascot q-anim">
           <svg viewBox="0 0 140 140" fill="none">
             <g class="book">
               <path d="M70 42c-14-10-30-12-44-6v60c14-6 30-4 44 6 14-10 30-12 44-6V36c-14-6-30-4-44 6z" fill="#2C5596"/>
               <path d="M70 42v60" stroke="#16294A" stroke-width="2"/>
               <path d="M38 52l10 6M38 66l10 6M102 52l-10 6M102 66l-10 6" stroke="#FDD017" stroke-width="2.6" stroke-linecap="round"/>
-              <g>
-                <circle cx="61" cy="62" r="2.6" fill="#fff"/><circle cx="79" cy="62" r="2.6" fill="#fff"/>
-                <path d="M64 70c2.4 2.6 9.6 2.6 12 0" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/>
-              </g>
+              <circle cx="61" cy="62" r="2.6" fill="#FDD017"/><circle cx="79" cy="62" r="2.6" fill="#FDD017"/>
+              <path d="M64 70c2.4 2.6 9.6 2.6 12 0" stroke="#FDD017" stroke-width="2.4" stroke-linecap="round"/>
             </g>
-            <g class="orbit">
-              <g class="spark s1"><text font-size="16" fill="#E0B400">π</text></g>
-              <g class="spark s2"><text font-size="15" fill="#2C5596">√</text></g>
-              <g class="spark s3"><text font-size="16" fill="#E0B400">+</text></g>
-            </g>
+            <text x="20" y="26" font-size="15" fill="#E0B400">π</text>
+            <text x="112" y="46" font-size="14" fill="#2C5596">√</text>
+            <text x="26" y="118" font-size="15" fill="#E0B400">+</text>
           </svg>
         </div>
-        <span class="eyebrow"><span class="dot"></span><span data-i18n="w.eyebrow">Welcome</span></span>
-        <h1 class="title" data-i18n-html="w.title">Free, one-on-one <span class="serif">math &amp; science</span> help — right here in your community.</h1>
-        <p class="lead" data-i18n-html="w.lead">Beyond Limits pairs students in grades <b>4–10</b> with caring tutors and mentors, at little or no cost to your family. This takes about <b>4 minutes</b> — and you can stop anytime.</p>
-
-        <div class="field"><label data-i18n="w.lang">Choose your language · Elige tu idioma</label></div>
-        <div class="opts cols-2">
+        <span class="eyebrow q-anim d1"><span class="dot"></span><span data-i18n="w.eyebrow">Welcome</span></span>
+        <h1 class="title q-anim d2" data-i18n-html="w.title">Free, one-on-one <span class="serif">math &amp; science</span> help.</h1>
+        <p class="lead q-anim d3" data-i18n-html="w.lead">Beyond Limits pairs students in grades <b>4–10</b> with caring tutors and mentors, at little or no cost to your family. About <b>4 minutes</b> — stop anytime.</p>
+        <div class="field q-anim d4"><label data-i18n="w.lang">Choose your language · Elige tu idioma</label></div>
+        <div class="opts cols-2 q-anim d5">
           <button class="opt selected" id="langEn">
             <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9S14.5 18.4 12 21M12 3c-2.5 2.6-3.8 5.6-3.8 9s1.3 6.4 3.8 9"/></svg></span>
-            <span><b>English</b><br><small style="color:var(--muted)">Continue in English</small></span>
+            <span><b>English</b><small>Continue in English</small></span>
             <span class="ring"></span>
           </button>
           <button class="opt" id="langEs">
             <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9S14.5 18.4 12 21M12 3c-2.5 2.6-3.8 5.6-3.8 9s1.3 6.4 3.8 9"/></svg></span>
-            <span><b>Español</b><br><small style="color:var(--muted)">Continuar en español</small></span>
+            <span><b>Español</b><small>Continuar en español</small></span>
             <span class="ring"></span>
           </button>
         </div>
-
-        <div class="foot">
+        <div class="foot q-anim d6">
           <div class="spacer"></div>
           <button class="btn btn-primary" id="goHow"><span data-i18n="w.cta">Let's begin</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
@@ -329,42 +314,22 @@ p.lead b{color:var(--ink);font-weight:600}
         </div>
       </section>
 
-      <!-- SCREEN 1 : HOW IT WORKS -->
+      <!-- HOW IT WORKS -->
       <section class="screen" id="s-how">
-        <span class="eyebrow"><span class="dot"></span><span data-i18n="how.eyebrow">What to expect</span></span>
-        <h1 class="title" data-i18n="how.title">A few gentle questions, then you're done.</h1>
-        <p class="lead" data-i18n="how.lead">No paperwork maze. We'll ask who we can help, how to reach you, and then walk you through one short agreement.</p>
-
-        <div class="opts" style="margin-bottom:20px">
-          <div class="opt" style="cursor:default;pointer-events:none">
-            <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M5 8l7-5 7 5M5 16l7 5 7-5"/></svg></span>
-            <span><b data-i18n="how.b1t">One-on-one tutoring</b><br><small style="color:var(--muted)" data-i18n="how.b1s">Math &amp; science, grades 4–10</small></span>
-          </div>
-          <div class="opt" style="cursor:default;pointer-events:none">
-            <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 5-9 5-9-5 9-5zM3 13l9 5 9-5"/></svg></span>
-            <span><b data-i18n="how.b2t">Mentoring &amp; confidence</b><br><small style="color:var(--muted)" data-i18n="how.b2s">Not just homework — real growth</small></span>
-          </div>
-          <div class="opt" style="cursor:default;pointer-events:none">
-            <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M5 12l7 7 7-7"/></svg></span>
-            <span><b data-i18n="how.b3t">Sliding-scale cost</b><br><small style="color:var(--muted)" data-i18n="how.b3s">Little or no cost for eligible families</small></span>
-          </div>
+        <span class="eyebrow q-anim"><span class="dot"></span><span data-i18n="how.eyebrow">What to expect</span></span>
+        <h1 class="title q-anim d1" data-i18n="how.title">A few gentle questions, then you're done.</h1>
+        <p class="lead q-anim d2" data-i18n="how.lead">No paperwork maze. We'll ask who we can help, how to reach you, then walk you through one short agreement.</p>
+        <div class="opts q-anim d3" style="margin-bottom:18px">
+          <div class="opt" style="cursor:default;pointer-events:none"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M5 8l7-5 7 5M5 16l7 5 7-5"/></svg></span><span><b data-i18n="how.b1t">One-on-one tutoring</b><small data-i18n="how.b1s">Math & science, grades 4–10</small></span></div>
+          <div class="opt" style="cursor:default;pointer-events:none"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 5-9 5-9-5 9-5zM3 13l9 5 9-5"/></svg></span><span><b data-i18n="how.b2t">Mentoring & confidence</b><small data-i18n="how.b2s">Not just homework — real growth</small></span></div>
+          <div class="opt" style="cursor:default;pointer-events:none"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M5 12l7 7 7-7"/></svg></span><span><b data-i18n="how.b3t">Sliding-scale cost</b><small data-i18n="how.b3s">Little or no cost for eligible families</small></span></div>
         </div>
-
-        <div class="field"><label data-i18n="how.mode">How would you like to answer?</label></div>
-        <div class="opts cols-2" id="modeOpts">
-          <button class="opt selected" id="modeType">
-            <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg></span>
-            <span><b data-i18n="how.typed">Type my answers</b></span>
-            <span class="ring"></span>
-          </button>
-          <button class="opt" id="modeVoice">
-            <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></svg></span>
-            <span><b data-i18n="how.voice">Speak my answers</b></span>
-            <span class="ring"></span>
-          </button>
+        <div class="field q-anim d4"><label data-i18n="how.mode">How would you like to answer?</label></div>
+        <div class="opts cols-2 q-anim d5" id="modeOpts">
+          <button class="opt selected" id="modeType"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg></span><span><b data-i18n="how.typed">Type my answers</b></span><span class="ring"></span></button>
+          <button class="opt" id="modeVoice"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></svg></span><span><b data-i18n="how.voice">Speak my answers</b></span><span class="ring"></span></button>
         </div>
-
-        <div class="foot">
+        <div class="foot q-anim d6">
           <button class="back" id="howBack"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg><span data-i18n="nav.back">Back</span></button>
           <div class="spacer"></div>
           <button class="btn btn-primary" id="goRoute"><span data-i18n="nav.next">Continue</span>
@@ -372,51 +337,30 @@ p.lead b{color:var(--ink);font-weight:600}
         </div>
       </section>
 
-      <!-- SCREEN 2 : ROUTING -->
+      <!-- ROUTING -->
       <section class="screen" id="s-route">
-        <span class="eyebrow"><span class="dot"></span><span data-i18n="r.eyebrow">A quick question</span></span>
-        <h1 class="title" data-i18n="r.title">How did you hear about us?</h1>
-        <p class="lead" data-i18n="r.lead">This helps us match you with the right program and paperwork. No wrong answer.</p>
-
-        <div class="opts" id="routeOpts">
-          <button class="opt" data-route="academic">
-            <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 012-2h12a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V5z"/><path d="M8 7h8M8 11h8M8 15h5"/></svg></span>
-            <span><b data-i18n="r.a1t">Beyond Limits Academic Program</b></span>
-            <span class="ring"></span>
-          </button>
-          <button class="opt" data-route="peace">
-            <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-5.5-7-11a4 4 0 017-2.6A4 4 0 0119 10c0 5.5-7 11-7 11z"/></svg></span>
-            <span><b data-i18n="r.a2t">Stamford Peace Youth referral</b></span>
-            <span class="ring"></span>
-          </button>
-          <button class="opt" data-route="school">
-            <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-4h6v4M9 12h.01M15 12h.01"/></svg></span>
-            <span><b data-i18n="r.a3t">School or community referral</b></span>
-            <span class="ring"></span>
-          </button>
-          <button class="opt" data-route="unsure">
-            <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.2 9a2.8 2.8 0 015.6.7c0 1.8-2.6 2.2-2.6 3.8M12 17h.01"/></svg></span>
-            <span><b data-i18n="r.a4t">I'm not sure</b></span>
-            <span class="ring"></span>
-          </button>
+        <span class="eyebrow q-anim"><span class="dot"></span><span data-i18n="r.eyebrow">A quick question</span></span>
+        <h1 class="title q-anim d1" data-i18n="r.title">How did you hear about us?</h1>
+        <p class="lead q-anim d2" data-i18n="r.lead">This helps us match you with the right program and paperwork. No wrong answer.</p>
+        <div class="opts q-anim d3" id="routeOpts">
+          <button class="opt" data-route="academic"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 012-2h12a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V5z"/><path d="M8 7h8M8 11h8M8 15h5"/></svg></span><span><b data-i18n="r.a1t">Beyond Limits Academic Program</b></span><span class="ring"></span></button>
+          <button class="opt" data-route="peace"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-5.5-7-11a4 4 0 017-2.6A4 4 0 0119 10c0 5.5-7 11-7 11z"/></svg></span><span><b data-i18n="r.a2t">Stamford Peace Youth referral</b></span><span class="ring"></span></button>
+          <button class="opt" data-route="school"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-4h6v4M9 12h.01M15 12h.01"/></svg></span><span><b data-i18n="r.a3t">School or community referral</b></span><span class="ring"></span></button>
+          <button class="opt" data-route="unsure"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.2 9a2.8 2.8 0 015.6.7c0 1.8-2.6 2.2-2.6 3.8M12 17h.01"/></svg></span><span><b data-i18n="r.a4t">I'm not sure</b></span><span class="ring"></span></button>
         </div>
-
-        <!-- voice echo + confirm -->
         <div class="echo" id="routeEcho">
           <div class="q" data-i18n="echo.q">Just to make sure we heard you right:</div>
           <div class="heard" id="routeHeard"></div>
           <div class="acts">
-            <button class="btn btn-primary" id="routeConfirm" style="padding:11px 20px;font-size:14px"><span data-i18n="echo.yes">Yes, that's correct</span></button>
-            <button class="btn btn-ghost" id="routeRedo" style="padding:11px 20px;font-size:14px"><span data-i18n="echo.no">No, let me re-say it</span></button>
+            <button class="btn btn-primary" id="routeConfirm" style="padding:11px 18px;font-size:14px"><span data-i18n="echo.yes">Yes, that's correct</span></button>
+            <button class="btn btn-ghost" id="routeRedo" style="padding:11px 18px;font-size:14px"><span data-i18n="echo.no">No, let me re-say it</span></button>
           </div>
         </div>
-
-        <button class="voice" id="routeVoiceBtn" style="display:none;margin-top:14px">
+        <button class="voice q-anim d4" id="routeVoiceBtn" style="display:none;margin-top:14px">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></svg>
           <span data-i18n="voice.say">Tap and say how you heard about us</span>
         </button>
-
-        <div class="foot">
+        <div class="foot q-anim d5">
           <button class="back" id="routeBack"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg><span data-i18n="nav.back">Back</span></button>
           <div class="spacer"></div>
           <button class="btn btn-primary" id="goStudent" disabled><span data-i18n="nav.next">Continue</span>
@@ -424,29 +368,26 @@ p.lead b{color:var(--ink);font-weight:600}
         </div>
       </section>
 
-      <!-- SCREEN 3 : STUDENT -->
+      <!-- STUDENT -->
       <section class="screen" id="s-student">
-        <span class="eyebrow"><span class="dot"></span><span data-i18n="st.eyebrow">About your student</span></span>
-        <h1 class="title" data-i18n="st.title">Who will we be helping?</h1>
-        <p class="lead" data-i18n="st.lead">Tell us about the student. Everything you share is kept private and confidential.</p>
-
-        <div class="row2">
-          <div class="field"><label data-i18n="st.first">Student first name</label><input class="input" id="stFirst" data-i18n-ph="st.first" placeholder="First name"></div>
-          <div class="field"><label data-i18n="st.last">Student last name</label><input class="input" id="stLast" placeholder="Last name"></div>
+        <span class="eyebrow q-anim"><span class="dot"></span><span data-i18n="st.eyebrow">About your student</span></span>
+        <h1 class="title q-anim d1" data-i18n="st.title">Who will we be helping?</h1>
+        <p class="lead q-anim d2" data-i18n="st.lead">Tell us about the student. Everything you share is kept private and confidential.</p>
+        <div class="row2 q-anim d3">
+          <div class="field"><label data-i18n="st.first">Student first name</label><input class="input" id="stFirst" placeholder="First name" autocomplete="off"></div>
+          <div class="field"><label data-i18n="st.last">Student last name</label><input class="input" id="stLast" placeholder="Last name" autocomplete="off"></div>
         </div>
-
-        <div class="field"><label data-i18n="st.grade">Grade level</label></div>
-        <div class="opts cols-3" id="gradeOpts">
-          <button class="tile" data-grade="4"><span class="tic"></span><span class="ti">4<small style="font-size:11px">th</small></span></button>
-          <button class="tile" data-grade="5"><span class="tic"></span><span class="ti">5<small style="font-size:11px">th</small></span></button>
-          <button class="tile" data-grade="6"><span class="tic"></span><span class="ti">6<small style="font-size:11px">th</small></span></button>
-          <button class="tile" data-grade="7"><span class="tic"></span><span class="ti">7<small style="font-size:11px">th</small></span></button>
-          <button class="tile" data-grade="8"><span class="tic"></span><span class="ti">8<small style="font-size:11px">th</small></span></button>
-          <button class="tile" data-grade="9"><span class="tic"></span><span class="ti">9<small style="font-size:11px">th</small></span></button>
-          <button class="tile" data-grade="10"><span class="tic"></span><span class="ti">10<small style="font-size:11px">th</small></span></button>
+        <div class="field q-anim d4"><label data-i18n="st.grade">Grade level</label></div>
+        <div class="opts cols-4 q-anim d5" id="gradeOpts">
+          <button class="tile" data-grade="4"><span class="tic"></span>4<small>th</small></button>
+          <button class="tile" data-grade="5"><span class="tic"></span>5<small>th</small></button>
+          <button class="tile" data-grade="6"><span class="tic"></span>6<small>th</small></button>
+          <button class="tile" data-grade="7"><span class="tic"></span>7<small>th</small></button>
+          <button class="tile" data-grade="8"><span class="tic"></span>8<small>th</small></button>
+          <button class="tile" data-grade="9"><span class="tic"></span>9<small>th</small></button>
+          <button class="tile" data-grade="10"><span class="tic"></span>10<small>th</small></button>
         </div>
-
-        <div class="foot">
+        <div class="foot q-anim d6">
           <button class="back" id="studentBack"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg><span data-i18n="nav.back">Back</span></button>
           <div class="spacer"></div>
           <button class="btn btn-primary" id="goSchool"><span data-i18n="nav.next">Continue</span>
@@ -454,24 +395,25 @@ p.lead b{color:var(--ink);font-weight:600}
         </div>
       </section>
 
-      <!-- SCREEN 4 : SCHOOL -->
+      <!-- SCHOOL -->
       <section class="screen" id="s-school">
-        <span class="eyebrow"><span class="dot"></span><span data-i18n="sc.eyebrow">School &amp; location</span></span>
-        <h1 class="title" data-i18n="sc.title">Where does your student go to school?</h1>
-
-        <div class="field"><label data-i18n="sc.school">Full name of school</label><input class="input" id="schoolName" placeholder="e.g. Stamford High School"></div>
-        <div class="row2">
-          <div class="field"><label data-i18n="sc.city">City</label>
-            <div class="opts cols-2" id="cityOpts" style="gap:8px">
-              <button class="tile" data-city="Stamford" style="flex-direction:row;justify-content:center;gap:8px;padding:12px"><span class="tic"></span>Stamford</button>
-              <button class="tile" data-city="Norwalk" style="flex-direction:row;justify-content:center;gap:8px;padding:12px"><span class="tic"></span>Norwalk</button>
-            </div>
+        <span class="eyebrow q-anim"><span class="dot"></span><span data-i18n="sc.eyebrow">School & location</span></span>
+        <h1 class="title q-anim d1" data-i18n="sc.title">Where does your student go to school?</h1>
+        <p class="lead q-anim d2" data-i18n="sc.lead">Start typing and we'll suggest schools that match your student's grade.</p>
+        <div class="field q-anim d3" style="position:relative">
+          <label data-i18n="sc.school">School name</label>
+          <input class="input" id="schoolName" data-i18n-ph="sc.schoolph" placeholder="Start typing a school name…" autocomplete="off">
+          <div class="suggest" id="schoolSuggest"></div>
+        </div>
+        <div class="row2 q-anim d4">
+          <div class="field" style="position:relative">
+            <label data-i18n="sc.city">City</label>
+            <input class="input" id="cityInput" placeholder="Stamford" autocomplete="off">
+            <div class="suggest" id="citySuggest"></div>
           </div>
           <div class="field"><label data-i18n="sc.dob">Date of birth</label><input class="input" id="dob" type="date"></div>
         </div>
-        
-
-        <div class="foot">
+        <div class="foot q-anim d5">
           <button class="back" id="schoolBack"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg><span data-i18n="nav.back">Back</span></button>
           <div class="spacer"></div>
           <button class="btn btn-primary" id="goParent"><span data-i18n="nav.next">Continue</span>
@@ -479,20 +421,22 @@ p.lead b{color:var(--ink);font-weight:600}
         </div>
       </section>
 
-      <!-- SCREEN 5 : PARENT -->
+      <!-- PARENT -->
       <section class="screen" id="s-parent">
-        <span class="eyebrow"><span class="dot"></span><span data-i18n="p.eyebrow">About you</span></span>
-        <h1 class="title" data-i18n="p.title">How can we reach you?</h1>
-        <p class="lead" data-i18n="p.lead">We'll use your email to send your agreement and next steps — nothing else.</p>
-
-        <div class="row2">
-          <div class="field"><label data-i18n="p.first">Your first name</label><input class="input" id="pFirst" placeholder="First name"></div>
-          <div class="field"><label data-i18n="p.last">Your last name</label><input class="input" id="pLast" placeholder="Last name"></div>
+        <span class="eyebrow q-anim"><span class="dot"></span><span data-i18n="p.eyebrow">About you</span></span>
+        <h1 class="title q-anim d1" data-i18n="p.title">How can we reach you?</h1>
+        <p class="lead q-anim d2" data-i18n="p.lead">We'll use your email to send your agreement and next steps — nothing else.</p>
+        <div class="row2 q-anim d3">
+          <div class="field"><label data-i18n="p.first">Your first name</label><input class="input" id="pFirst" placeholder="First name" autocomplete="off"></div>
+          <div class="field"><label data-i18n="p.last">Your last name</label><input class="input" id="pLast" placeholder="Last name" autocomplete="off"></div>
         </div>
-        <div class="field"><label data-i18n="p.phone">Your phone number</label><input class="input" id="pPhone" type="tel" placeholder="(203) 555-0123"></div>
-        <div class="field"><label data-i18n="p.email">Your email address</label><input class="input" id="pEmail" type="email" placeholder="you@example.com"></div>
-
-        <div class="foot">
+        <div class="field q-anim d4"><label data-i18n="p.phone">Your phone number</label><input class="input" id="pPhone" type="tel" placeholder="(203) 555-0123" autocomplete="off"></div>
+        <div class="field q-anim d5" style="position:relative">
+          <label data-i18n="p.email">Your email address</label>
+          <input class="input" id="pEmail" type="email" placeholder="you@example.com" autocomplete="off">
+          <div class="suggest" id="emailSuggest"></div>
+        </div>
+        <div class="foot q-anim d6">
           <button class="back" id="parentBack"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg><span data-i18n="nav.back">Back</span></button>
           <div class="spacer"></div>
           <button class="btn btn-primary" id="goExtras"><span data-i18n="nav.next">Continue</span>
@@ -500,63 +444,51 @@ p.lead b{color:var(--ink);font-weight:600}
         </div>
       </section>
 
-      <!-- SCREEN 6 : EXTRAS (optional) -->
+      <!-- EXTRAS -->
       <section class="screen" id="s-extras">
-        <span class="eyebrow"><span class="dot"></span><span data-i18n="x.eyebrow">A few more (optional)</span></span>
-        <h1 class="title" data-i18n="x.title">Help us keep this free for every family.</h1>
-        <p class="lead" data-i18n-html="x.lead">These questions are <b>optional</b>. They're shared only in aggregate with funders — never tied to your name — and help us show the community's diversity. Choose "prefer not to say" anytime.</p>
-
-        <div class="field"><label data-i18n="x.lang">What language(s) are spoken at home?</label><input class="input" id="xLang" placeholder="English, Spanish…"></div>
-
-        <div class="field"><label data-i18n="x.income">Annual household income</label></div>
-        <div class="opts cols-2" id="incomeOpts">
+        <span class="eyebrow q-anim"><span class="dot"></span><span data-i18n="x.eyebrow">A few more (optional)</span></span>
+        <h1 class="title q-anim d1" data-i18n="x.title">Help us keep this free for every family.</h1>
+        <p class="lead q-anim d2" data-i18n-html="x.lead">These questions are <b>optional</b>. They're shared only in aggregate with funders — never tied to your name. Choose "prefer not to say" anytime.</p>
+        <div class="field q-anim d3" style="position:relative">
+          <label data-i18n="x.lang">What language(s) are spoken at home?</label>
+          <input class="input" id="xLang" data-i18n-ph="x.langph" placeholder="Start typing a language…" autocomplete="off">
+          <div class="suggest" id="langSuggest"></div>
+        </div>
+        <div class="field q-anim d4"><label data-i18n="x.income">Annual household income</label></div>
+        <div class="opts cols-2 q-anim d5" id="incomeOpts">
           <button class="opt" data-income="<25"><span>Less than $25,000</span><span class="ring"></span></button>
           <button class="opt" data-income="25-50"><span>$25,000–$49,999</span><span class="ring"></span></button>
           <button class="opt" data-income="50-75"><span>$50,000–$74,999</span><span class="ring"></span></button>
           <button class="opt" data-income="75-100"><span>$75,000–$99,999</span><span class="ring"></span></button>
           <button class="opt" data-income="100-150"><span>$100,000–$149,999</span><span class="ring"></span></button>
           <button class="opt" data-income="150+"><span>$150,000 or more</span><span class="ring"></span></button>
-          <button class="opt" data-income="n/a"><span>Prefer not to say</span><span class="ring"></span></button>
+          <button class="opt" data-income="n/a"><span data-i18n="x.preferNo">Prefer not to say</span><span class="ring"></span></button>
         </div>
-
-        <div class="foot">
+        <div class="foot q-anim d6">
           <button class="back" id="extrasBack"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg><span data-i18n="nav.back">Back</span></button>
           <div class="spacer"></div>
-          <button class="btn btn-ghost" id="skipExtras" style="padding:15px 20px"><span data-i18n="x.skip">Skip — these are optional</span></button>
+          <button class="btn btn-ghost" id="skipExtras" style="padding:15px 18px"><span data-i18n="x.skip">Skip</span></button>
           <button class="btn btn-primary" id="goAgree"><span data-i18n="nav.next">Continue</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
         </div>
       </section>
 
-      <!-- SCREEN 7 : AGREEMENT -->
+      <!-- AGREEMENT -->
       <section class="screen" id="s-agree">
-        <span class="eyebrow"><span class="dot"></span><span data-i18n="a.eyebrow">Your agreement</span></span>
-        <h1 class="title" data-i18n="a.title">One last step — review &amp; sign.</h1>
-        <p class="lead" data-i18n="a.lead">Please read through the program agreement below. It just sets out how we'll work together.</p>
-
-        <div class="agree-scroll" id="agreeScroll">
-          <div class="agree-box" id="agreeBox"></div>
+        <span class="eyebrow q-anim"><span class="dot"></span><span data-i18n="a.eyebrow">Your agreement</span></span>
+        <h1 class="title q-anim d1" data-i18n="a.title">One last step — review & sign.</h1>
+        <p class="lead q-anim d2" data-i18n="a.lead">Please read through the program agreement below. It just sets out how we'll work together.</p>
+        <div class="agree-scroll q-anim d3"><div class="agree-box" id="agreeBox"></div></div>
+        <div class="q-anim d4">
+          <div class="check-row" id="ackSched"><div class="cb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg></div><div class="txt" data-i18n-html="a.ack1">I understand we commit to scheduling <b>at least one session per week</b>.</div></div>
+          <div class="check-row" id="ackPower"><div class="cb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg></div><div class="txt" data-i18n-html="a.ack2">I understand I'll also complete a <b>PowerSchool parent consent form</b>.</div></div>
+          <div class="check-row" id="ackCert"><div class="cb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg></div><div class="txt" data-i18n-html="a.ack3">I certify the information I've provided is <b>true and correct</b>.</div></div>
         </div>
-
-        <div class="check-row" id="ackSched">
-          <div class="cb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg></div>
-          <div class="txt" data-i18n-html="a.ack1">I understand we commit to scheduling <b>at least one session per week</b>.</div>
+        <div class="row2 q-anim d5" style="margin-top:16px">
+          <div class="field"><label data-i18n="a.stusig">Student signature <span class="hint" data-i18n="a.sigtype">(type name)</span></label><input class="input sig" id="stuSig" placeholder="Student's full name" autocomplete="off"></div>
+          <div class="field"><label data-i18n="a.parsig">Parent / guardian signature <span class="hint" data-i18n="a.sigtype">(type name)</span></label><input class="input sig" id="parSig" placeholder="Your full name" autocomplete="off"></div>
         </div>
-        <div class="check-row" id="ackPower">
-          <div class="cb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg></div>
-          <div class="txt" data-i18n-html="a.ack2">I understand I'll also complete a <b>PowerSchool parent consent form</b>.</div>
-        </div>
-        <div class="check-row" id="ackCert">
-          <div class="cb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg></div>
-          <div class="txt" data-i18n-html="a.ack3">I certify the information I've provided is <b>true and correct</b>.</div>
-        </div>
-
-        <div class="row2" style="margin-top:18px">
-          <div class="field"><label data-i18n="a.stusig">Student signature <span class="hint" data-i18n="a.sigtype">(type name)</span></label><input class="input sig" id="stuSig" placeholder="Student's full name"></div>
-          <div class="field"><label data-i18n="a.parsig">Parent / guardian signature <span class="hint" data-i18n="a.sigtype">(type name)</span></label><input class="input sig" id="parSig" placeholder="Your full name"></div>
-        </div>
-
-        <div class="foot">
+        <div class="foot q-anim d6">
           <button class="back" id="agreeBack"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg><span data-i18n="nav.back">Back</span></button>
           <div class="spacer"></div>
           <button class="btn btn-primary" id="goDeliver" disabled><span data-i18n="a.cta">Send my agreement</span>
@@ -564,31 +496,26 @@ p.lead b{color:var(--ink);font-weight:600}
         </div>
       </section>
 
-      <!-- SCREEN 8 : DELIVERY -->
+      <!-- DELIVERY -->
       <section class="screen" id="s-deliver">
-        <span class="eyebrow"><span class="dot"></span><span data-i18n="d.eyebrow">Almost there</span></span>
-        <h1 class="title" data-i18n="d.title">Your agreement is on its way.</h1>
-        <p class="lead" data-i18n-html="d.lead">We'll send the agreement link and this QR code to <b id="dEmail"></b>. You can also scan it right now to open the agreement on your phone.</p>
-
-        <div class="deliver">
+        <span class="eyebrow q-anim"><span class="dot"></span><span data-i18n="d.eyebrow">Almost there</span></span>
+        <h1 class="title q-anim d1" data-i18n="d.title">Your agreement is on its way.</h1>
+        <p class="lead q-anim d2" data-i18n-html="d.lead">We'll send the agreement link and this QR code to <b id="dEmail"></b>. Or scan it now to open it on your phone.</p>
+        <div class="deliver q-anim d3">
           <div>
-            <div class="field"><label data-i18n="d.email">Send it to this email</label><input class="input" id="dEmailInput" type="email"></div>
-            <button class="btn btn-gold btn-block" id="sendEmail" style="margin-bottom:10px">
+            <div class="field"><label data-i18n="d.email">Send it to this email</label><input class="input" id="dEmailInput" type="email" autocomplete="off"></div>
+            <button class="btn btn-gold btn-block" id="sendEmail" style="margin-bottom:9px">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
-              <span data-i18n="d.send">Email me the link &amp; QR</span>
+              <span data-i18n="d.send">Email me the link & QR</span>
             </button>
             <button class="btn btn-ghost btn-block" id="copyLink">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 012-2h10"/></svg>
               <span data-i18n="d.copy">Copy agreement link</span>
             </button>
           </div>
-          <div class="qr-wrap">
-            <div id="qrBox"></div>
-            <div class="lbl" data-i18n="d.qr">Scan to open your agreement</div>
-          </div>
+          <div class="qr-wrap"><div id="qrBox"></div><div class="lbl" data-i18n="d.qr">Scan to open your agreement</div></div>
         </div>
-
-        <div class="foot">
+        <div class="foot q-anim d4">
           <button class="back" id="deliverBack"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg><span data-i18n="nav.back">Back</span></button>
           <div class="spacer"></div>
           <button class="btn btn-primary" id="goDone"><span data-i18n="d.done">I'm all set</span>
@@ -596,39 +523,42 @@ p.lead b{color:var(--ink);font-weight:600}
         </div>
       </section>
 
-      <!-- SCREEN 9 : DONE -->
+      <!-- DONE -->
       <section class="screen" id="s-done">
-        <div class="mascot" style="margin:4px 0 20px">
+        <div class="mascot q-anim">
           <svg viewBox="0 0 120 120" fill="none">
             <circle cx="60" cy="60" r="46" fill="#FDD017"/>
             <circle cx="60" cy="60" r="46" fill="none" stroke="#E0B400" stroke-width="3" stroke-dasharray="6 7"/>
             <path d="M42 60l11 11 25-27" stroke="#213B70" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
           </svg>
         </div>
-        <h1 class="title" style="text-align:center" data-i18n="done.title">You're all set. 🎉</h1>
-        <p class="lead" style="text-align:center" data-i18n-html="done.lead">Your agreement has been sent to <b id="doneEmail"></b>. A Beyond Limits team member will follow up with you shortly.</p>
-
-        <div class="opts" style="margin:6px 0 22px">
-          <div class="opt" style="cursor:default;pointer-events:none">
-            <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-5.5-7-11a4 4 0 017-2.6A4 4 0 0119 10c0 5.5-7 11-7 11z"/></svg></span>
-            <span><b data-i18n="done.help">Need help? Talk to a real person.</b><br><small style="color:var(--muted)"><span data-i18n="done.email">Email</span> <a href="mailto:info@beyondlimitsacademics.org" style="color:var(--navy);font-weight:700;text-decoration:none">info@beyondlimitsacademics.org</a></small></span>
-          </div>
+        <h1 class="title q-anim d1" style="text-align:center" data-i18n="done.title">You're all set. 🎉</h1>
+        <p class="lead q-anim d2" style="text-align:center" data-i18n-html="done.lead">Your agreement has been sent to <b id="doneEmail"></b>. A Beyond Limits team member will follow up shortly.</p>
+        <div class="opts q-anim d3" style="margin:4px 0 20px">
+          <div class="opt" style="cursor:default;pointer-events:none"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-5.5-7-11a4 4 0 017-2.6A4 4 0 0119 10c0 5.5-7 11-7 11z"/></svg></span><span><b data-i18n="done.help">Need help? Talk to a real person.</b><small><span data-i18n="done.email">Email</span> <a href="mailto:info@beyondlimitsacademics.org" style="color:var(--navy);font-weight:700;text-decoration:none">info@beyondlimitsacademics.org</a></small></span></div>
         </div>
-
-        <button class="btn btn-ghost btn-block" id="restart"><span data-i18n="done.restart">Start over</span></button>
+        <button class="btn btn-ghost btn-block q-anim d4" id="restart"><span data-i18n="done.restart">Start over</span></button>
       </section>
 
     </div>
   </div>
 </div>
 
-<!-- ===== Help sheet ===== -->
-<div class="sheet" id="helpSheet">
-  <button class="close" id="helpClose">×</button>
-  <h4 data-i18n="help.title">We're here to help</h4>
-  <p data-i18n="help.body">Questions about the program, cost, or this form? Reach a real Beyond Limits team member any time.</p>
-  <p><a href="mailto:info@beyondlimitsacademics.org">info@beyondlimitsacademics.org</a></p>
-</div>
+<!-- AI assistant -->
+<div class="ai-overlay" id="aiOverlay"></div>
+<aside class="ai-drawer" id="aiDrawer" aria-label="AI Assistant">
+  <div class="ai-head">
+    <div class="avatar"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.8 5.6L19.5 9l-5.7 1.4L12 16l-1.8-5.6L4.5 9l5.7-1.4L12 2zM19 14l.9 2.6 2.6.9-2.6.9L19 21l-.9-2.6-2.6-.9 2.6-.9L19 14z"/></svg></div>
+    <div class="tt"><span data-i18n="ai.title">Enrollment Assistant</span><small data-i18n="ai.sub">Here to help — ask me anything</small></div>
+    <button class="close" id="aiClose">×</button>
+  </div>
+  <div class="ai-body" id="aiBody"></div>
+  <div class="ai-chips" id="aiChips"></div>
+  <div class="ai-input">
+    <input id="aiInput" data-i18n-ph="ai.ph" placeholder="Ask a question…" autocomplete="off">
+    <button id="aiSend" aria-label="Send"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 3L11 14M22 3l-7 19-4-8-8-4 19-7z"/></svg></button>
+  </div>
+</aside>
 
 <div class="toast" id="toast"></div>
 <script>
@@ -636,7 +566,6 @@ p.lead b{color:var(--ink);font-weight:600}
 const CONFIG = {
   brand: "Beyond Limits Academics",
   contactEmail: "info@beyondlimitsacademics.org",
-  // Replace these with the real hosted agreement links per program:
   agreements: {
     academic: "https://docs.google.com/forms/d/e/1FAIpQLSfdnkKqLy7VbDSKOO3ETo4xCv4m2Z_dqml1FgGyw4NjuuM-vw/viewform",
     peace:    "https://docs.google.com/forms/d/e/1FAIpQLSfdnkKqLy7VbDSKOO3ETo4xCv4m2Z_dqml1FgGyw4NjuuM-vw/viewform",
@@ -646,350 +575,315 @@ const CONFIG = {
 };
 const QR_SVGS = {"academic": "<svg width=\"360\" height=\"360\" class=\"segno\"><g transform=\"scale(8)\"><path fill=\"#fff\" d=\"M0 0h45v45h-45z\"/><path class=\"qrline\" stroke=\"#213b70\" d=\"M2 2.5h7m1 0h3m1 0h3m1 0h1m1 0h1m2 0h3m1 0h4m3 0h1m1 0h7m-41 1h1m5 0h1m2 0h1m1 0h2m1 0h1m1 0h1m1 0h3m1 0h1m1 0h2m3 0h1m1 0h1m2 0h1m5 0h1m-41 1h1m1 0h3m1 0h1m2 0h3m4 0h6m1 0h2m1 0h2m1 0h1m1 0h2m1 0h1m1 0h3m1 0h1m-41 1h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h6m2 0h4m1 0h4m1 0h2m2 0h1m1 0h3m1 0h1m-41 1h1m1 0h3m1 0h1m1 0h5m2 0h1m1 0h1m2 0h1m2 0h1m1 0h1m2 0h1m2 0h1m2 0h1m1 0h3m1 0h1m-41 1h1m5 0h1m1 0h1m1 0h2m1 0h1m2 0h2m1 0h1m2 0h1m1 0h1m3 0h1m2 0h1m2 0h1m5 0h1m-41 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-33 1h3m1 0h4m1 0h2m2 0h1m2 0h1m1 0h4m-30 1h1m3 0h1m1 0h4m1 0h3m1 0h1m1 0h1m2 0h2m1 0h2m4 0h1m1 0h7m2 0h1m-39 1h4m1 0h1m2 0h2m1 0h1m4 0h1m1 0h2m1 0h1m2 0h3m1 0h1m2 0h2m1 0h2m1 0h2m-41 1h2m1 0h1m2 0h1m1 0h3m3 0h1m1 0h1m1 0h1m1 0h1m1 0h2m2 0h3m1 0h1m1 0h1m1 0h1m1 0h1m2 0h2m-41 1h2m5 0h1m1 0h1m3 0h1m1 0h4m1 0h2m1 0h2m4 0h1m1 0h2m1 0h1m1 0h2m-38 1h1m1 0h2m1 0h3m8 0h1m3 0h1m1 0h4m1 0h1m5 0h1m5 0h1m-40 1h2m2 0h2m1 0h1m1 0h2m1 0h1m1 0h3m2 0h1m3 0h1m3 0h2m1 0h1m2 0h2m1 0h1m2 0h1m-39 1h1m4 0h1m2 0h1m1 0h1m3 0h1m2 0h2m1 0h3m2 0h2m1 0h2m1 0h4m1 0h1m2 0h1m-41 1h1m1 0h3m8 0h1m1 0h7m4 0h4m2 0h1m4 0h1m1 0h2m-41 1h2m1 0h1m2 0h1m1 0h1m2 0h4m1 0h1m3 0h3m1 0h1m1 0h4m2 0h1m2 0h1m3 0h1m-32 1h1m2 0h3m1 0h1m1 0h3m3 0h1m1 0h1m1 0h1m5 0h6m1 0h1m-41 1h2m1 0h2m1 0h5m1 0h1m1 0h1m3 0h1m1 0h9m1 0h1m4 0h1m1 0h2m1 0h1m-40 1h2m1 0h2m2 0h1m2 0h1m4 0h1m4 0h2m1 0h1m1 0h1m2 0h2m1 0h1m2 0h1m1 0h1m1 0h1m-39 1h1m2 0h1m1 0h6m1 0h4m2 0h1m3 0h2m3 0h4m1 0h1m1 0h1m1 0h2m-38 1h2m6 0h1m1 0h6m1 0h1m2 0h1m1 0h1m2 0h1m1 0h3m1 0h1m1 0h3m1 0h1m1 0h1m-41 1h1m2 0h2m1 0h5m1 0h2m1 0h2m1 0h1m4 0h1m1 0h4m1 0h1m1 0h5m3 0h1m-41 1h3m2 0h1m7 0h1m2 0h2m2 0h5m1 0h7m2 0h3m-37 1h4m1 0h6m1 0h3m1 0h1m2 0h3m1 0h1m4 0h1m2 0h2m2 0h3m-39 1h3m1 0h2m2 0h1m4 0h4m1 0h1m2 0h1m1 0h1m1 0h3m2 0h1m1 0h1m2 0h2m1 0h3m-39 1h2m1 0h3m1 0h2m4 0h1m2 0h1m1 0h1m1 0h4m1 0h1m1 0h1m2 0h1m1 0h1m1 0h1m3 0h1m-41 1h2m3 0h1m1 0h4m1 0h1m1 0h2m1 0h1m1 0h3m2 0h1m1 0h1m1 0h5m1 0h1m1 0h2m2 0h1m-41 1h2m1 0h2m1 0h1m1 0h1m3 0h2m3 0h1m3 0h2m9 0h2m6 0h1m-41 1h2m1 0h2m6 0h6m1 0h6m1 0h6m1 0h1m2 0h4m-36 1h4m4 0h2m3 0h1m1 0h1m1 0h2m1 0h3m1 0h3m2 0h2m2 0h3m1 0h1m-39 1h3m2 0h2m1 0h1m1 0h1m1 0h1m1 0h3m2 0h1m2 0h1m4 0h1m2 0h2m2 0h1m2 0h1m-40 1h2m3 0h4m1 0h3m1 0h2m1 0h1m1 0h1m1 0h3m1 0h1m2 0h1m3 0h6m-30 1h2m3 0h4m3 0h2m3 0h1m1 0h4m1 0h1m3 0h2m1 0h2m-41 1h7m1 0h3m2 0h1m2 0h2m5 0h1m1 0h3m2 0h1m1 0h1m1 0h1m1 0h3m1 0h1m-41 1h1m5 0h1m5 0h2m1 0h4m1 0h1m1 0h1m5 0h5m3 0h2m-38 1h1m1 0h3m1 0h1m1 0h1m1 0h1m7 0h1m1 0h1m1 0h3m3 0h2m1 0h10m-41 1h1m1 0h3m1 0h1m2 0h1m1 0h2m2 0h1m1 0h1m1 0h1m3 0h1m2 0h3m3 0h1m2 0h1m4 0h1m-41 1h1m1 0h3m1 0h1m2 0h1m1 0h4m2 0h2m1 0h1m1 0h2m1 0h3m3 0h1m1 0h1m4 0h1m1 0h1m-41 1h1m5 0h1m4 0h2m1 0h1m1 0h1m4 0h1m2 0h1m1 0h5m1 0h1m1 0h2m1 0h1m1 0h2m-41 1h7m1 0h4m1 0h3m2 0h5m1 0h1m2 0h3m1 0h3m1 0h3m1 0h1\"/></g></svg>", "peace": "<svg width=\"360\" height=\"360\" class=\"segno\"><g transform=\"scale(8)\"><path fill=\"#fff\" d=\"M0 0h45v45h-45z\"/><path class=\"qrline\" stroke=\"#213b70\" d=\"M2 2.5h7m1 0h3m1 0h3m1 0h1m1 0h1m2 0h3m1 0h4m3 0h1m1 0h7m-41 1h1m5 0h1m2 0h1m1 0h2m1 0h1m1 0h1m1 0h3m1 0h1m1 0h2m3 0h1m1 0h1m2 0h1m5 0h1m-41 1h1m1 0h3m1 0h1m2 0h3m4 0h6m1 0h2m1 0h2m1 0h1m1 0h2m1 0h1m1 0h3m1 0h1m-41 1h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h6m2 0h4m1 0h4m1 0h2m2 0h1m1 0h3m1 0h1m-41 1h1m1 0h3m1 0h1m1 0h5m2 0h1m1 0h1m2 0h1m2 0h1m1 0h1m2 0h1m2 0h1m2 0h1m1 0h3m1 0h1m-41 1h1m5 0h1m1 0h1m1 0h2m1 0h1m2 0h2m1 0h1m2 0h1m1 0h1m3 0h1m2 0h1m2 0h1m5 0h1m-41 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-33 1h3m1 0h4m1 0h2m2 0h1m2 0h1m1 0h4m-30 1h1m3 0h1m1 0h4m1 0h3m1 0h1m1 0h1m2 0h2m1 0h2m4 0h1m1 0h7m2 0h1m-39 1h4m1 0h1m2 0h2m1 0h1m4 0h1m1 0h2m1 0h1m2 0h3m1 0h1m2 0h2m1 0h2m1 0h2m-41 1h2m1 0h1m2 0h1m1 0h3m3 0h1m1 0h1m1 0h1m1 0h1m1 0h2m2 0h3m1 0h1m1 0h1m1 0h1m1 0h1m2 0h2m-41 1h2m5 0h1m1 0h1m3 0h1m1 0h4m1 0h2m1 0h2m4 0h1m1 0h2m1 0h1m1 0h2m-38 1h1m1 0h2m1 0h3m8 0h1m3 0h1m1 0h4m1 0h1m5 0h1m5 0h1m-40 1h2m2 0h2m1 0h1m1 0h2m1 0h1m1 0h3m2 0h1m3 0h1m3 0h2m1 0h1m2 0h2m1 0h1m2 0h1m-39 1h1m4 0h1m2 0h1m1 0h1m3 0h1m2 0h2m1 0h3m2 0h2m1 0h2m1 0h4m1 0h1m2 0h1m-41 1h1m1 0h3m8 0h1m1 0h7m4 0h4m2 0h1m4 0h1m1 0h2m-41 1h2m1 0h1m2 0h1m1 0h1m2 0h4m1 0h1m3 0h3m1 0h1m1 0h4m2 0h1m2 0h1m3 0h1m-32 1h1m2 0h3m1 0h1m1 0h3m3 0h1m1 0h1m1 0h1m5 0h6m1 0h1m-41 1h2m1 0h2m1 0h5m1 0h1m1 0h1m3 0h1m1 0h9m1 0h1m4 0h1m1 0h2m1 0h1m-40 1h2m1 0h2m2 0h1m2 0h1m4 0h1m4 0h2m1 0h1m1 0h1m2 0h2m1 0h1m2 0h1m1 0h1m1 0h1m-39 1h1m2 0h1m1 0h6m1 0h4m2 0h1m3 0h2m3 0h4m1 0h1m1 0h1m1 0h2m-38 1h2m6 0h1m1 0h6m1 0h1m2 0h1m1 0h1m2 0h1m1 0h3m1 0h1m1 0h3m1 0h1m1 0h1m-41 1h1m2 0h2m1 0h5m1 0h2m1 0h2m1 0h1m4 0h1m1 0h4m1 0h1m1 0h5m3 0h1m-41 1h3m2 0h1m7 0h1m2 0h2m2 0h5m1 0h7m2 0h3m-37 1h4m1 0h6m1 0h3m1 0h1m2 0h3m1 0h1m4 0h1m2 0h2m2 0h3m-39 1h3m1 0h2m2 0h1m4 0h4m1 0h1m2 0h1m1 0h1m1 0h3m2 0h1m1 0h1m2 0h2m1 0h3m-39 1h2m1 0h3m1 0h2m4 0h1m2 0h1m1 0h1m1 0h4m1 0h1m1 0h1m2 0h1m1 0h1m1 0h1m3 0h1m-41 1h2m3 0h1m1 0h4m1 0h1m1 0h2m1 0h1m1 0h3m2 0h1m1 0h1m1 0h5m1 0h1m1 0h2m2 0h1m-41 1h2m1 0h2m1 0h1m1 0h1m3 0h2m3 0h1m3 0h2m9 0h2m6 0h1m-41 1h2m1 0h2m6 0h6m1 0h6m1 0h6m1 0h1m2 0h4m-36 1h4m4 0h2m3 0h1m1 0h1m1 0h2m1 0h3m1 0h3m2 0h2m2 0h3m1 0h1m-39 1h3m2 0h2m1 0h1m1 0h1m1 0h1m1 0h3m2 0h1m2 0h1m4 0h1m2 0h2m2 0h1m2 0h1m-40 1h2m3 0h4m1 0h3m1 0h2m1 0h1m1 0h1m1 0h3m1 0h1m2 0h1m3 0h6m-30 1h2m3 0h4m3 0h2m3 0h1m1 0h4m1 0h1m3 0h2m1 0h2m-41 1h7m1 0h3m2 0h1m2 0h2m5 0h1m1 0h3m2 0h1m1 0h1m1 0h1m1 0h3m1 0h1m-41 1h1m5 0h1m5 0h2m1 0h4m1 0h1m1 0h1m5 0h5m3 0h2m-38 1h1m1 0h3m1 0h1m1 0h1m1 0h1m7 0h1m1 0h1m1 0h3m3 0h2m1 0h10m-41 1h1m1 0h3m1 0h1m2 0h1m1 0h2m2 0h1m1 0h1m1 0h1m3 0h1m2 0h3m3 0h1m2 0h1m4 0h1m-41 1h1m1 0h3m1 0h1m2 0h1m1 0h4m2 0h2m1 0h1m1 0h2m1 0h3m3 0h1m1 0h1m4 0h1m1 0h1m-41 1h1m5 0h1m4 0h2m1 0h1m1 0h1m4 0h1m2 0h1m1 0h5m1 0h1m1 0h2m1 0h1m1 0h2m-41 1h7m1 0h4m1 0h3m2 0h5m1 0h1m2 0h3m1 0h3m1 0h3m1 0h1\"/></g></svg>", "school": "<svg width=\"360\" height=\"360\" class=\"segno\"><g transform=\"scale(8)\"><path fill=\"#fff\" d=\"M0 0h45v45h-45z\"/><path class=\"qrline\" stroke=\"#213b70\" d=\"M2 2.5h7m1 0h3m1 0h3m1 0h1m1 0h1m2 0h3m1 0h4m3 0h1m1 0h7m-41 1h1m5 0h1m2 0h1m1 0h2m1 0h1m1 0h1m1 0h3m1 0h1m1 0h2m3 0h1m1 0h1m2 0h1m5 0h1m-41 1h1m1 0h3m1 0h1m2 0h3m4 0h6m1 0h2m1 0h2m1 0h1m1 0h2m1 0h1m1 0h3m1 0h1m-41 1h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h6m2 0h4m1 0h4m1 0h2m2 0h1m1 0h3m1 0h1m-41 1h1m1 0h3m1 0h1m1 0h5m2 0h1m1 0h1m2 0h1m2 0h1m1 0h1m2 0h1m2 0h1m2 0h1m1 0h3m1 0h1m-41 1h1m5 0h1m1 0h1m1 0h2m1 0h1m2 0h2m1 0h1m2 0h1m1 0h1m3 0h1m2 0h1m2 0h1m5 0h1m-41 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-33 1h3m1 0h4m1 0h2m2 0h1m2 0h1m1 0h4m-30 1h1m3 0h1m1 0h4m1 0h3m1 0h1m1 0h1m2 0h2m1 0h2m4 0h1m1 0h7m2 0h1m-39 1h4m1 0h1m2 0h2m1 0h1m4 0h1m1 0h2m1 0h1m2 0h3m1 0h1m2 0h2m1 0h2m1 0h2m-41 1h2m1 0h1m2 0h1m1 0h3m3 0h1m1 0h1m1 0h1m1 0h1m1 0h2m2 0h3m1 0h1m1 0h1m1 0h1m1 0h1m2 0h2m-41 1h2m5 0h1m1 0h1m3 0h1m1 0h4m1 0h2m1 0h2m4 0h1m1 0h2m1 0h1m1 0h2m-38 1h1m1 0h2m1 0h3m8 0h1m3 0h1m1 0h4m1 0h1m5 0h1m5 0h1m-40 1h2m2 0h2m1 0h1m1 0h2m1 0h1m1 0h3m2 0h1m3 0h1m3 0h2m1 0h1m2 0h2m1 0h1m2 0h1m-39 1h1m4 0h1m2 0h1m1 0h1m3 0h1m2 0h2m1 0h3m2 0h2m1 0h2m1 0h4m1 0h1m2 0h1m-41 1h1m1 0h3m8 0h1m1 0h7m4 0h4m2 0h1m4 0h1m1 0h2m-41 1h2m1 0h1m2 0h1m1 0h1m2 0h4m1 0h1m3 0h3m1 0h1m1 0h4m2 0h1m2 0h1m3 0h1m-32 1h1m2 0h3m1 0h1m1 0h3m3 0h1m1 0h1m1 0h1m5 0h6m1 0h1m-41 1h2m1 0h2m1 0h5m1 0h1m1 0h1m3 0h1m1 0h9m1 0h1m4 0h1m1 0h2m1 0h1m-40 1h2m1 0h2m2 0h1m2 0h1m4 0h1m4 0h2m1 0h1m1 0h1m2 0h2m1 0h1m2 0h1m1 0h1m1 0h1m-39 1h1m2 0h1m1 0h6m1 0h4m2 0h1m3 0h2m3 0h4m1 0h1m1 0h1m1 0h2m-38 1h2m6 0h1m1 0h6m1 0h1m2 0h1m1 0h1m2 0h1m1 0h3m1 0h1m1 0h3m1 0h1m1 0h1m-41 1h1m2 0h2m1 0h5m1 0h2m1 0h2m1 0h1m4 0h1m1 0h4m1 0h1m1 0h5m3 0h1m-41 1h3m2 0h1m7 0h1m2 0h2m2 0h5m1 0h7m2 0h3m-37 1h4m1 0h6m1 0h3m1 0h1m2 0h3m1 0h1m4 0h1m2 0h2m2 0h3m-39 1h3m1 0h2m2 0h1m4 0h4m1 0h1m2 0h1m1 0h1m1 0h3m2 0h1m1 0h1m2 0h2m1 0h3m-39 1h2m1 0h3m1 0h2m4 0h1m2 0h1m1 0h1m1 0h4m1 0h1m1 0h1m2 0h1m1 0h1m1 0h1m3 0h1m-41 1h2m3 0h1m1 0h4m1 0h1m1 0h2m1 0h1m1 0h3m2 0h1m1 0h1m1 0h5m1 0h1m1 0h2m2 0h1m-41 1h2m1 0h2m1 0h1m1 0h1m3 0h2m3 0h1m3 0h2m9 0h2m6 0h1m-41 1h2m1 0h2m6 0h6m1 0h6m1 0h6m1 0h1m2 0h4m-36 1h4m4 0h2m3 0h1m1 0h1m1 0h2m1 0h3m1 0h3m2 0h2m2 0h3m1 0h1m-39 1h3m2 0h2m1 0h1m1 0h1m1 0h1m1 0h3m2 0h1m2 0h1m4 0h1m2 0h2m2 0h1m2 0h1m-40 1h2m3 0h4m1 0h3m1 0h2m1 0h1m1 0h1m1 0h3m1 0h1m2 0h1m3 0h6m-30 1h2m3 0h4m3 0h2m3 0h1m1 0h4m1 0h1m3 0h2m1 0h2m-41 1h7m1 0h3m2 0h1m2 0h2m5 0h1m1 0h3m2 0h1m1 0h1m1 0h1m1 0h3m1 0h1m-41 1h1m5 0h1m5 0h2m1 0h4m1 0h1m1 0h1m5 0h5m3 0h2m-38 1h1m1 0h3m1 0h1m1 0h1m1 0h1m7 0h1m1 0h1m1 0h3m3 0h2m1 0h10m-41 1h1m1 0h3m1 0h1m2 0h1m1 0h2m2 0h1m1 0h1m1 0h1m3 0h1m2 0h3m3 0h1m2 0h1m4 0h1m-41 1h1m1 0h3m1 0h1m2 0h1m1 0h4m2 0h2m1 0h1m1 0h2m1 0h3m3 0h1m1 0h1m4 0h1m1 0h1m-41 1h1m5 0h1m4 0h2m1 0h1m1 0h1m4 0h1m2 0h1m1 0h5m1 0h1m1 0h2m1 0h1m1 0h2m-41 1h7m1 0h4m1 0h3m2 0h5m1 0h1m2 0h3m1 0h3m1 0h3m1 0h1\"/></g></svg>", "unsure": "<svg width=\"360\" height=\"360\" class=\"segno\"><g transform=\"scale(8)\"><path fill=\"#fff\" d=\"M0 0h45v45h-45z\"/><path class=\"qrline\" stroke=\"#213b70\" d=\"M2 2.5h7m1 0h3m1 0h3m1 0h1m1 0h1m2 0h3m1 0h4m3 0h1m1 0h7m-41 1h1m5 0h1m2 0h1m1 0h2m1 0h1m1 0h1m1 0h3m1 0h1m1 0h2m3 0h1m1 0h1m2 0h1m5 0h1m-41 1h1m1 0h3m1 0h1m2 0h3m4 0h6m1 0h2m1 0h2m1 0h1m1 0h2m1 0h1m1 0h3m1 0h1m-41 1h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h6m2 0h4m1 0h4m1 0h2m2 0h1m1 0h3m1 0h1m-41 1h1m1 0h3m1 0h1m1 0h5m2 0h1m1 0h1m2 0h1m2 0h1m1 0h1m2 0h1m2 0h1m2 0h1m1 0h3m1 0h1m-41 1h1m5 0h1m1 0h1m1 0h2m1 0h1m2 0h2m1 0h1m2 0h1m1 0h1m3 0h1m2 0h1m2 0h1m5 0h1m-41 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-33 1h3m1 0h4m1 0h2m2 0h1m2 0h1m1 0h4m-30 1h1m3 0h1m1 0h4m1 0h3m1 0h1m1 0h1m2 0h2m1 0h2m4 0h1m1 0h7m2 0h1m-39 1h4m1 0h1m2 0h2m1 0h1m4 0h1m1 0h2m1 0h1m2 0h3m1 0h1m2 0h2m1 0h2m1 0h2m-41 1h2m1 0h1m2 0h1m1 0h3m3 0h1m1 0h1m1 0h1m1 0h1m1 0h2m2 0h3m1 0h1m1 0h1m1 0h1m1 0h1m2 0h2m-41 1h2m5 0h1m1 0h1m3 0h1m1 0h4m1 0h2m1 0h2m4 0h1m1 0h2m1 0h1m1 0h2m-38 1h1m1 0h2m1 0h3m8 0h1m3 0h1m1 0h4m1 0h1m5 0h1m5 0h1m-40 1h2m2 0h2m1 0h1m1 0h2m1 0h1m1 0h3m2 0h1m3 0h1m3 0h2m1 0h1m2 0h2m1 0h1m2 0h1m-39 1h1m4 0h1m2 0h1m1 0h1m3 0h1m2 0h2m1 0h3m2 0h2m1 0h2m1 0h4m1 0h1m2 0h1m-41 1h1m1 0h3m8 0h1m1 0h7m4 0h4m2 0h1m4 0h1m1 0h2m-41 1h2m1 0h1m2 0h1m1 0h1m2 0h4m1 0h1m3 0h3m1 0h1m1 0h4m2 0h1m2 0h1m3 0h1m-32 1h1m2 0h3m1 0h1m1 0h3m3 0h1m1 0h1m1 0h1m5 0h6m1 0h1m-41 1h2m1 0h2m1 0h5m1 0h1m1 0h1m3 0h1m1 0h9m1 0h1m4 0h1m1 0h2m1 0h1m-40 1h2m1 0h2m2 0h1m2 0h1m4 0h1m4 0h2m1 0h1m1 0h1m2 0h2m1 0h1m2 0h1m1 0h1m1 0h1m-39 1h1m2 0h1m1 0h6m1 0h4m2 0h1m3 0h2m3 0h4m1 0h1m1 0h1m1 0h2m-38 1h2m6 0h1m1 0h6m1 0h1m2 0h1m1 0h1m2 0h1m1 0h3m1 0h1m1 0h3m1 0h1m1 0h1m-41 1h1m2 0h2m1 0h5m1 0h2m1 0h2m1 0h1m4 0h1m1 0h4m1 0h1m1 0h5m3 0h1m-41 1h3m2 0h1m7 0h1m2 0h2m2 0h5m1 0h7m2 0h3m-37 1h4m1 0h6m1 0h3m1 0h1m2 0h3m1 0h1m4 0h1m2 0h2m2 0h3m-39 1h3m1 0h2m2 0h1m4 0h4m1 0h1m2 0h1m1 0h1m1 0h3m2 0h1m1 0h1m2 0h2m1 0h3m-39 1h2m1 0h3m1 0h2m4 0h1m2 0h1m1 0h1m1 0h4m1 0h1m1 0h1m2 0h1m1 0h1m1 0h1m3 0h1m-41 1h2m3 0h1m1 0h4m1 0h1m1 0h2m1 0h1m1 0h3m2 0h1m1 0h1m1 0h5m1 0h1m1 0h2m2 0h1m-41 1h2m1 0h2m1 0h1m1 0h1m3 0h2m3 0h1m3 0h2m9 0h2m6 0h1m-41 1h2m1 0h2m6 0h6m1 0h6m1 0h6m1 0h1m2 0h4m-36 1h4m4 0h2m3 0h1m1 0h1m1 0h2m1 0h3m1 0h3m2 0h2m2 0h3m1 0h1m-39 1h3m2 0h2m1 0h1m1 0h1m1 0h1m1 0h3m2 0h1m2 0h1m4 0h1m2 0h2m2 0h1m2 0h1m-40 1h2m3 0h4m1 0h3m1 0h2m1 0h1m1 0h1m1 0h3m1 0h1m2 0h1m3 0h6m-30 1h2m3 0h4m3 0h2m3 0h1m1 0h4m1 0h1m3 0h2m1 0h2m-41 1h7m1 0h3m2 0h1m2 0h2m5 0h1m1 0h3m2 0h1m1 0h1m1 0h1m1 0h3m1 0h1m-41 1h1m5 0h1m5 0h2m1 0h4m1 0h1m1 0h1m5 0h5m3 0h2m-38 1h1m1 0h3m1 0h1m1 0h1m1 0h1m7 0h1m1 0h1m1 0h3m3 0h2m1 0h10m-41 1h1m1 0h3m1 0h1m2 0h1m1 0h2m2 0h1m1 0h1m1 0h1m3 0h1m2 0h3m3 0h1m2 0h1m4 0h1m-41 1h1m1 0h3m1 0h1m2 0h1m1 0h4m2 0h2m1 0h1m1 0h2m1 0h3m3 0h1m1 0h1m4 0h1m1 0h1m-41 1h1m5 0h1m4 0h2m1 0h1m1 0h1m4 0h1m2 0h1m1 0h5m1 0h1m1 0h2m1 0h1m1 0h2m-41 1h7m1 0h4m1 0h3m2 0h5m1 0h1m2 0h3m1 0h3m1 0h3m1 0h1\"/></g></svg>"};
 
+/* ================= DATA ================= */
+const SCHOOLS = [{"n": "Stamford High School", "c": "Stamford", "st": "CT", "lo": 9, "hi": 12}, {"n": "Westhill High School", "c": "Stamford", "st": "CT", "lo": 9, "hi": 12}, {"n": "Academy of Information Technology & Engineering", "c": "Stamford", "st": "CT", "lo": 9, "hi": 12}, {"n": "Cloonan Middle School", "c": "Stamford", "st": "CT", "lo": 6, "hi": 8}, {"n": "Dolan Middle School", "c": "Stamford", "st": "CT", "lo": 6, "hi": 8}, {"n": "Turn of River Middle School", "c": "Stamford", "st": "CT", "lo": 6, "hi": 8}, {"n": "Rippowam Middle School", "c": "Stamford", "st": "CT", "lo": 6, "hi": 8}, {"n": "Scofield Magnet Middle School", "c": "Stamford", "st": "CT", "lo": 6, "hi": 8}, {"n": "Rogers International School", "c": "Stamford", "st": "CT", "lo": 4, "hi": 8}, {"n": "Hart Magnet Elementary School", "c": "Stamford", "st": "CT", "lo": 4, "hi": 5}, {"n": "K.T. Murphy Elementary School", "c": "Stamford", "st": "CT", "lo": 4, "hi": 5}, {"n": "Northeast Elementary School", "c": "Stamford", "st": "CT", "lo": 4, "hi": 5}, {"n": "Springdale Elementary School", "c": "Stamford", "st": "CT", "lo": 4, "hi": 5}, {"n": "Toquam Elementary School", "c": "Stamford", "st": "CT", "lo": 4, "hi": 5}, {"n": "Westover Magnet Elementary School", "c": "Stamford", "st": "CT", "lo": 4, "hi": 5}, {"n": "Davenport Ridge Elementary School", "c": "Stamford", "st": "CT", "lo": 4, "hi": 5}, {"n": "Julia A. Stark Elementary School", "c": "Stamford", "st": "CT", "lo": 4, "hi": 5}, {"n": "Newfield Elementary School", "c": "Stamford", "st": "CT", "lo": 4, "hi": 5}, {"n": "Stillmeadow Elementary School", "c": "Stamford", "st": "CT", "lo": 4, "hi": 5}, {"n": "Strawberry Hill School", "c": "Stamford", "st": "CT", "lo": 4, "hi": 8}, {"n": "Norwalk High School", "c": "Norwalk", "st": "CT", "lo": 9, "hi": 12}, {"n": "Brien McMahon High School", "c": "Norwalk", "st": "CT", "lo": 9, "hi": 12}, {"n": "P-TECH Norwalk", "c": "Norwalk", "st": "CT", "lo": 9, "hi": 12}, {"n": "Roton Middle School", "c": "Norwalk", "st": "CT", "lo": 6, "hi": 8}, {"n": "Nathan Hale Middle School", "c": "Norwalk", "st": "CT", "lo": 6, "hi": 8}, {"n": "West Rocks Middle School", "c": "Norwalk", "st": "CT", "lo": 6, "hi": 8}, {"n": "Ponus Ridge STEAM Academy", "c": "Norwalk", "st": "CT", "lo": 6, "hi": 8}, {"n": "Brookside Elementary School", "c": "Norwalk", "st": "CT", "lo": 4, "hi": 5}, {"n": "Columbus Magnet School", "c": "Norwalk", "st": "CT", "lo": 4, "hi": 8}, {"n": "Cranbury Elementary School", "c": "Norwalk", "st": "CT", "lo": 4, "hi": 5}, {"n": "Fox Run Elementary School", "c": "Norwalk", "st": "CT", "lo": 4, "hi": 5}, {"n": "Jefferson Marine Science Elementary", "c": "Norwalk", "st": "CT", "lo": 4, "hi": 5}, {"n": "Kendall College & Career Academy", "c": "Norwalk", "st": "CT", "lo": 4, "hi": 5}, {"n": "Marvin Elementary School", "c": "Norwalk", "st": "CT", "lo": 4, "hi": 5}, {"n": "Naramake Elementary School", "c": "Norwalk", "st": "CT", "lo": 4, "hi": 5}, {"n": "Rowayton Elementary School", "c": "Norwalk", "st": "CT", "lo": 4, "hi": 5}, {"n": "Silvermine Dual Language Magnet", "c": "Norwalk", "st": "CT", "lo": 4, "hi": 8}, {"n": "Tracey Magnet School", "c": "Norwalk", "st": "CT", "lo": 4, "hi": 5}, {"n": "Wolfpit Integrated Arts Elementary", "c": "Norwalk", "st": "CT", "lo": 4, "hi": 5}, {"n": "Lincoln Elementary School", "c": "", "st": "", "lo": 4, "hi": 5}, {"n": "Lincoln Middle School", "c": "", "st": "", "lo": 6, "hi": 8}, {"n": "Lincoln High School", "c": "", "st": "", "lo": 9, "hi": 12}, {"n": "Washington Elementary School", "c": "", "st": "", "lo": 4, "hi": 5}, {"n": "Washington Middle School", "c": "", "st": "", "lo": 6, "hi": 8}, {"n": "Washington High School", "c": "", "st": "", "lo": 9, "hi": 12}, {"n": "Jefferson Elementary School", "c": "", "st": "", "lo": 4, "hi": 5}, {"n": "Jefferson Middle School", "c": "", "st": "", "lo": 6, "hi": 8}, {"n": "Jefferson High School", "c": "", "st": "", "lo": 9, "hi": 12}, {"n": "Roosevelt Elementary School", "c": "", "st": "", "lo": 4, "hi": 5}, {"n": "Roosevelt Middle School", "c": "", "st": "", "lo": 6, "hi": 8}, {"n": "Roosevelt High School", "c": "", "st": "", "lo": 9, "hi": 12}, {"n": "Madison Elementary School", "c": "", "st": "", "lo": 4, "hi": 5}, {"n": "Central Middle School", "c": "", "st": "", "lo": 6, "hi": 8}, {"n": "Central High School", "c": "", "st": "", "lo": 9, "hi": 12}, {"n": "Oak Grove Elementary School", "c": "", "st": "", "lo": 4, "hi": 5}, {"n": "Maple Elementary School", "c": "", "st": "", "lo": 4, "hi": 5}, {"n": "Riverside Elementary School", "c": "", "st": "", "lo": 4, "hi": 5}, {"n": "Parkview Elementary School", "c": "", "st": "", "lo": 4, "hi": 5}, {"n": "Valley Middle School", "c": "", "st": "", "lo": 6, "hi": 8}, {"n": "Sunset Elementary School", "c": "", "st": "", "lo": 4, "hi": 5}];
+const LANGUAGES = ["English","Spanish","Español","Haitian Creole","Kreyòl Ayisyen","Portuguese","Português","French","Français","Mandarin","Chinese","Cantonese","Vietnamese","Tiếng Việt","Arabic","العربية","Russian","Русский","Korean","한국어","Hindi","हिन्दी","Bengali","বাংলা","Urdu","اردو","Tagalog","Filipino","Italian","Italiano","Polish","Polski","German","Deutsch","Japanese","日本語","Gujarati","ગુજરાતી","Persian","Farsi","فارسی","Albanian","Shqip","Greek","Ελληνικά","Armenian","Հայերեն","Khmer","ភាសាខ្មែរ","Thai","ไทย","Swahili","Kiswahili","Somali","Soomaali","Amharic","አማርኛ","Ukrainian","Українська","Romanian","Română","Turkish","Türkçe","Dutch","Nederlands","Swedish","Svenska","Nepali","नेपाली","Punjabi","ਪੰਜਾਬੀ","Tamil","தமிழ்","Telugu","తెలుగు","Malayalam","മലയാളം","Marathi","मराठी","Sign Language","ASL"];
+const EMAIL_DOMAINS = ["gmail.com","yahoo.com","outlook.com","hotmail.com","icloud.com","aol.com","comcast.net","att.net","verizon.net","sbcglobal.net","msn.com","live.com","me.com","protonmail.com","ymail.com"];
+const CITIES = ["Stamford","Norwalk","Bridgeport","Greenwich","Darien","New Canaan","Westport","Wilton","Fairfield","Danbury"];
+
 /* ================= I18N ================= */
 const I18N = {
   en: {
+    "ai.label":"AI Assist","ai.title":"Enrollment Assistant","ai.sub":"Here to help — ask me anything","ai.ph":"Ask a question…",
     "w.eyebrow":"Welcome",
-    "w.title":"Free, one-on-one <span class='serif'>math &amp; science</span> help — right here in your community.",
-    "w.lead":"Beyond Limits pairs students in grades <b>4–10</b> with caring tutors and mentors, at little or no cost to your family. This takes about <b>4 minutes</b> — and you can stop anytime.",
-    "w.lang":"Choose your language · Elige tu idioma",
-    "w.cta":"Let's begin",
-    "how.eyebrow":"What to expect",
-    "how.title":"A few gentle questions, then you're done.",
-    "how.lead":"No paperwork maze. We'll ask who we can help, how to reach you, and then walk you through one short agreement.",
-    "how.b1t":"One-on-one tutoring","how.b1s":"Math & science, grades 4–10",
-    "how.b2t":"Mentoring & confidence","how.b2s":"Not just homework — real growth",
-    "how.b3t":"Sliding-scale cost","how.b3s":"Little or no cost for eligible families",
-    "how.mode":"How would you like to answer?",
-    "how.typed":"Type my answers","how.voice":"Speak my answers",
+    "w.title":"Free, one-on-one <span class='serif'>math &amp; science</span> help.",
+    "w.lead":"Beyond Limits pairs students in grades <b>4–10</b> with caring tutors and mentors, at little or no cost to your family. About <b>4 minutes</b> — stop anytime.",
+    "w.lang":"Choose your language · Elige tu idioma","w.cta":"Let's begin",
+    "how.eyebrow":"What to expect","how.title":"A few gentle questions, then you're done.","how.lead":"No paperwork maze. We'll ask who we can help, how to reach you, then walk you through one short agreement.",
+    "how.b1t":"One-on-one tutoring","how.b1s":"Math & science, grades 4–10","how.b2t":"Mentoring & confidence","how.b2s":"Not just homework — real growth","how.b3t":"Sliding-scale cost","how.b3s":"Little or no cost for eligible families",
+    "how.mode":"How would you like to answer?","how.typed":"Type my answers","how.voice":"Speak my answers",
     "nav.back":"Back","nav.next":"Continue",
-    "r.eyebrow":"A quick question","r.title":"How did you hear about us?",
-    "r.lead":"This helps us match you with the right program and paperwork. No wrong answer.",
-    "r.a1t":"Beyond Limits Academic Program","r.a2t":"Stamford Peace Youth referral",
-    "r.a3t":"School or community referral","r.a4t":"I'm not sure",
-    "echo.q":"Just to make sure we heard you right:","echo.yes":"Yes, that's correct","echo.no":"No, let me re-say it",
-    "voice.say":"Tap and say how you heard about us",
-    "st.eyebrow":"About your student","st.title":"Who will we be helping?",
-    "st.lead":"Tell us about the student. Everything you share is kept private and confidential.",
-    "st.first":"Student first name","st.last":"Student last name","st.grade":"Grade level",
-    "sc.eyebrow":"School & location","sc.title":"Where does your student go to school?",
-    "sc.school":"Full name of school","sc.city":"City","sc.dob":"Date of birth","sc.grade2":"Grade level","sc.opt":"(optional)",
-    "p.eyebrow":"About you","p.title":"How can we reach you?",
-    "p.lead":"We'll use your email to send your agreement and next steps — nothing else.",
-    "p.first":"Your first name","p.last":"Your last name","p.phone":"Your phone number","p.email":"Your email address",
-    "x.eyebrow":"A few more (optional)","x.title":"Help us keep this free for every family.",
-    "x.lead":"These questions are <b>optional</b>. They're shared only in aggregate with funders — never tied to your name — and help us show the community's diversity. Choose \"prefer not to say\" anytime.",
-    "x.lang":"What language(s) are spoken at home?","x.income":"Annual household income","x.skip":"Skip — these are optional",
-    "a.eyebrow":"Your agreement","a.title":"One last step — review & sign.",
-    "a.lead":"Please read through the program agreement below. It just sets out how we'll work together.",
-    "a.ack1":"I understand we commit to scheduling <b>at least one session per week</b>.",
-    "a.ack2":"I understand I'll also complete a <b>PowerSchool parent consent form</b>.",
-    "a.ack3":"I certify the information I've provided is <b>true and correct</b>.",
-    "a.stusig":"Student signature","a.parsig":"Parent / guardian signature","a.sigtype":"(type name)",
-    "a.cta":"Send my agreement",
-    "d.eyebrow":"Almost there","d.title":"Your agreement is on its way.",
-    "d.lead":"We'll send the agreement link and this QR code to <b id='dEmail'></b>. You can also scan it right now to open the agreement on your phone.",
-    "d.email":"Send it to this email","d.send":"Email me the link & QR","d.copy":"Copy agreement link","d.qr":"Scan to open your agreement","d.done":"I'm all set",
-    "done.title":"You're all set. 🎉",
-    "done.lead":"Your agreement has been sent to <b id='doneEmail'></b>. A Beyond Limits team member will follow up with you shortly.",
-    "done.help":"Need help? Talk to a real person.","done.email":"Email","done.restart":"Start over",
-    "help.title":"We're here to help","help.body":"Questions about the program, cost, or this form? Reach a real Beyond Limits team member any time.",
-    "toast.copied":"Link copied to clipboard",
-    "toast.sent":"Opening your email app…",
+    "r.eyebrow":"A quick question","r.title":"How did you hear about us?","r.lead":"This helps us match you with the right program and paperwork. No wrong answer.",
+    "r.a1t":"Beyond Limits Academic Program","r.a2t":"Stamford Peace Youth referral","r.a3t":"School or community referral","r.a4t":"I'm not sure",
+    "echo.q":"Just to make sure we heard you right:","echo.yes":"Yes, that's correct","echo.no":"No, let me re-say it","voice.say":"Tap and say how you heard about us",
+    "st.eyebrow":"About your student","st.title":"Who will we be helping?","st.lead":"Tell us about the student. Everything you share is kept private and confidential.","st.first":"Student first name","st.last":"Student last name","st.grade":"Grade level",
+    "sc.eyebrow":"School & location","sc.title":"Where does your student go to school?","sc.lead":"Start typing and we'll suggest schools that match your student's grade.","sc.school":"School name","sc.schoolph":"Start typing a school name…","sc.city":"City","sc.dob":"Date of birth",
+    "p.eyebrow":"About you","p.title":"How can we reach you?","p.lead":"We'll use your email to send your agreement and next steps — nothing else.","p.first":"Your first name","p.last":"Your last name","p.phone":"Your phone number","p.email":"Your email address",
+    "x.eyebrow":"A few more (optional)","x.title":"Help us keep this free for every family.","x.lead":"These questions are <b>optional</b>. They're shared only in aggregate with funders — never tied to your name. Choose \"prefer not to say\" anytime.","x.lang":"What language(s) are spoken at home?","x.langph":"Start typing a language…","x.income":"Annual household income","x.preferNo":"Prefer not to say","x.skip":"Skip",
+    "a.eyebrow":"Your agreement","a.title":"One last step — review & sign.","a.lead":"Please read through the program agreement below. It just sets out how we'll work together.",
+    "a.ack1":"I understand we commit to scheduling <b>at least one session per week</b>.","a.ack2":"I understand I'll also complete a <b>PowerSchool parent consent form</b>.","a.ack3":"I certify the information I've provided is <b>true and correct</b>.",
+    "a.stusig":"Student signature","a.parsig":"Parent / guardian signature","a.sigtype":"(type name)","a.cta":"Send my agreement",
+    "d.eyebrow":"Almost there","d.title":"Your agreement is on its way.","d.lead":"We'll send the agreement link and this QR code to <b id='dEmail'></b>. Or scan it now to open it on your phone.","d.email":"Send it to this email","d.send":"Email me the link & QR","d.copy":"Copy agreement link","d.qr":"Scan to open your agreement","d.done":"I'm all set",
+    "done.title":"You're all set. 🎉","done.lead":"Your agreement has been sent to <b id='doneEmail'></b>. A Beyond Limits team member will follow up shortly.","done.help":"Need help? Talk to a real person.","done.email":"Email","done.restart":"Start over",
+    "toast.copied":"Link copied to clipboard","toast.sent":"Opening your email app…","toast.norec":"Voice isn't supported in this browser","toast.try":"We couldn't catch that — try again",
   },
   es: {
+    "ai.label":"Asistente IA","ai.title":"Asistente de inscripción","ai.sub":"Aquí para ayudar — pregúntame","ai.ph":"Haz una pregunta…",
     "w.eyebrow":"Bienvenido",
-    "w.title":"Ayuda gratuita e individual de <span class='serif'>matemáticas y ciencias</span> — aquí en tu comunidad.",
-    "w.lead":"Beyond Limits conecta a estudiantes de grados <b>4–10</b> con tutores y mentores atentos, a bajo costo o sin costo para tu familia. Esto toma unos <b>4 minutos</b> — y puedes detenerte cuando quieras.",
-    "w.lang":"Elige tu idioma · Choose your language",
-    "w.cta":"Empecemos",
-    "how.eyebrow":"Qué esperar",
-    "how.title":"Unas preguntas sencillas y listo.",
-    "how.lead":"Sin laberintos de papeleo. Te preguntaremos a quién podemos ayudar, cómo contactarte, y luego un acuerdo breve.",
-    "how.b1t":"Tutoría individual","how.b1s":"Matemáticas y ciencias, grados 4–10",
-    "how.b2t":"Mentoría y confianza","how.b2s":"No solo tareas — crecimiento real",
-    "how.b3t":"Costo en escala móvil","how.b3s":"Poco o ningún costo para familias elegibles",
-    "how.mode":"¿Cómo prefieres responder?",
-    "how.typed":"Escribir mis respuestas","how.voice":"Hablar mis respuestas",
+    "w.title":"Ayuda gratuita e individual de <span class='serif'>matemáticas y ciencias</span>.",
+    "w.lead":"Beyond Limits conecta a estudiantes de grados <b>4–10</b> con tutores y mentores atentos, a bajo costo o sin costo. Unos <b>4 minutos</b> — detente cuando quieras.",
+    "w.lang":"Elige tu idioma · Choose your language","w.cta":"Empecemos",
+    "how.eyebrow":"Qué esperar","how.title":"Unas preguntas sencillas y listo.","how.lead":"Sin laberintos de papeleo. Te preguntaremos a quién podemos ayudar, cómo contactarte, y luego un acuerdo breve.",
+    "how.b1t":"Tutoría individual","how.b1s":"Matemáticas y ciencias, grados 4–10","how.b2t":"Mentoría y confianza","how.b2s":"No solo tareas — crecimiento real","how.b3t":"Costo en escala móvil","how.b3s":"Poco o ningún costo para familias elegibles",
+    "how.mode":"¿Cómo prefieres responder?","how.typed":"Escribir mis respuestas","how.voice":"Hablar mis respuestas",
     "nav.back":"Atrás","nav.next":"Continuar",
-    "r.eyebrow":"Una pregunta rápida","r.title":"¿Cómo te enteraste de nosotros?",
-    "r.lead":"Esto nos ayuda a conectarte con el programa y los documentos correctos. No hay respuesta equivocada.",
-    "r.a1t":"Programa Académico Beyond Limits","r.a2t":"Referido de Stamford Peace Youth",
-    "r.a3t":"Referido de escuela o comunidad","r.a4t":"No estoy seguro/a",
-    "echo.q":"Solo para asegurarnos de que te escuchamos bien:","echo.yes":"Sí, es correcto","echo.no":"No, lo diré de nuevo",
-    "voice.say":"Toca y di cómo te enteraste de nosotros",
-    "st.eyebrow":"Sobre tu estudiante","st.title":"¿A quién estaremos ayudando?",
-    "st.lead":"Cuéntanos sobre el estudiante. Todo lo que compartas es privado y confidencial.",
-    "st.first":"Nombre del estudiante","st.last":"Apellido del estudiante","st.grade":"Nivel de grado",
-    "sc.eyebrow":"Escuela y ubicación","sc.title":"¿A qué escuela asiste tu estudiante?",
-    "sc.school":"Nombre completo de la escuela","sc.city":"Ciudad","sc.dob":"Fecha de nacimiento","sc.grade2":"Nivel de grado","sc.opt":"(opcional)",
-    "p.eyebrow":"Sobre ti","p.title":"¿Cómo podemos contactarte?",
-    "p.lead":"Usaremos tu correo para enviarte tu acuerdo y los siguientes pasos — nada más.",
-    "p.first":"Tu nombre","p.last":"Tu apellido","p.phone":"Tu número de teléfono","p.email":"Tu correo electrónico",
-    "x.eyebrow":"Unas más (opcional)","x.title":"Ayúdanos a mantener esto gratuito para cada familia.",
-    "x.lead":"Estas preguntas son <b>opcionales</b>. Se comparten solo de forma agregada con financiadores — nunca con tu nombre — y nos ayudan a mostrar la diversidad de la comunidad. Elige \"prefiero no decir\" cuando quieras.",
-    "x.lang":"¿Qué idioma(s) se hablan en casa?","x.income":"Ingreso anual del hogar","x.skip":"Omitir — son opcionales",
-    "a.eyebrow":"Tu acuerdo","a.title":"Un último paso — revisa y firma.",
-    "a.lead":"Por favor lee el acuerdo del programa a continuación. Solo establece cómo trabajaremos juntos.",
-    "a.ack1":"Entiendo que nos comprometemos a programar <b>al menos una sesión por semana</b>.",
-    "a.ack2":"Entiendo que también completaré un <b>formulario de consentimiento de PowerSchool</b>.",
-    "a.ack3":"Certifico que la información que proporcioné es <b>verdadera y correcta</b>.",
-    "a.stusig":"Firma del estudiante","a.parsig":"Firma del padre/tutor","a.sigtype":"(escribe el nombre)",
-    "a.cta":"Enviar mi acuerdo",
-    "d.eyebrow":"Casi listo","d.title":"Tu acuerdo va en camino.",
-    "d.lead":"Enviaremos el enlace del acuerdo y este código QR a <b id='dEmail'></b>. También puedes escanearlo ahora para abrir el acuerdo en tu teléfono.",
-    "d.email":"Enviar a este correo","d.send":"Envíame el enlace y el QR","d.copy":"Copiar enlace del acuerdo","d.qr":"Escanea para abrir tu acuerdo","d.done":"Estoy listo/a",
-    "done.title":"¡Todo listo! 🎉",
-    "done.lead":"Tu acuerdo ha sido enviado a <b id='doneEmail'></b>. Un miembro del equipo de Beyond Limits te contactará pronto.",
-    "done.help":"¿Necesitas ayuda? Habla con una persona real.","done.email":"Correo","done.restart":"Empezar de nuevo",
-    "help.title":"Estamos aquí para ayudar","help.body":"¿Preguntas sobre el programa, el costo o este formulario? Contacta a un miembro real del equipo en cualquier momento.",
-    "toast.copied":"Enlace copiado al portapapeles",
-    "toast.sent":"Abriendo tu aplicación de correo…",
+    "r.eyebrow":"Una pregunta rápida","r.title":"¿Cómo te enteraste de nosotros?","r.lead":"Esto nos ayuda a conectarte con el programa y documentos correctos. No hay respuesta equivocada.",
+    "r.a1t":"Programa Académico Beyond Limits","r.a2t":"Referido de Stamford Peace Youth","r.a3t":"Referido de escuela o comunidad","r.a4t":"No estoy seguro/a",
+    "echo.q":"Solo para asegurarnos de que te escuchamos bien:","echo.yes":"Sí, es correcto","echo.no":"No, lo diré de nuevo","voice.say":"Toca y di cómo te enteraste",
+    "st.eyebrow":"Sobre tu estudiante","st.title":"¿A quién estaremos ayudando?","st.lead":"Cuéntanos sobre el estudiante. Todo es privado y confidencial.","st.first":"Nombre del estudiante","st.last":"Apellido del estudiante","st.grade":"Nivel de grado",
+    "sc.eyebrow":"Escuela y ubicación","sc.title":"¿A qué escuela asiste tu estudiante?","sc.lead":"Empieza a escribir y sugeriremos escuelas según el grado.","sc.school":"Nombre de la escuela","sc.schoolph":"Escribe el nombre de la escuela…","sc.city":"Ciudad","sc.dob":"Fecha de nacimiento",
+    "p.eyebrow":"Sobre ti","p.title":"¿Cómo podemos contactarte?","p.lead":"Usaremos tu correo para enviarte tu acuerdo y los siguientes pasos — nada más.","p.first":"Tu nombre","p.last":"Tu apellido","p.phone":"Tu número de teléfono","p.email":"Tu correo electrónico",
+    "x.eyebrow":"Unas más (opcional)","x.title":"Ayúdanos a mantener esto gratuito para cada familia.","x.lead":"Estas preguntas son <b>opcionales</b>. Se comparten solo de forma agregada con financiadores — nunca con tu nombre. Elige \"prefiero no decir\" cuando quieras.","x.lang":"¿Qué idioma(s) se hablan en casa?","x.langph":"Escribe un idioma…","x.income":"Ingreso anual del hogar","x.preferNo":"Prefiero no decir","x.skip":"Omitir",
+    "a.eyebrow":"Tu acuerdo","a.title":"Un último paso — revisa y firma.","a.lead":"Por favor lee el acuerdo del programa a continuación. Solo establece cómo trabajaremos juntos.",
+    "a.ack1":"Entiendo que nos comprometemos a programar <b>al menos una sesión por semana</b>.","a.ack2":"Entiendo que también completaré un <b>formulario de consentimiento de PowerSchool</b>.","a.ack3":"Certifico que la información que proporcioné es <b>verdadera y correcta</b>.",
+    "a.stusig":"Firma del estudiante","a.parsig":"Firma del padre/tutor","a.sigtype":"(escribe el nombre)","a.cta":"Enviar mi acuerdo",
+    "d.eyebrow":"Casi listo","d.title":"Tu acuerdo va en camino.","d.lead":"Enviaremos el enlace del acuerdo y este código QR a <b id='dEmail'></b>. O escanéalo ahora para abrirlo en tu teléfono.","d.email":"Enviar a este correo","d.send":"Envíame el enlace y el QR","d.copy":"Copiar enlace del acuerdo","d.qr":"Escanea para abrir tu acuerdo","d.done":"Estoy listo/a",
+    "done.title":"¡Todo listo! 🎉","done.lead":"Tu acuerdo ha sido enviado a <b id='doneEmail'></b>. Un miembro del equipo de Beyond Limits te contactará pronto.","done.help":"¿Necesitas ayuda? Habla con una persona real.","done.email":"Correo","done.restart":"Empezar de nuevo",
+    "toast.copied":"Enlace copiado al portapapeles","toast.sent":"Abriendo tu aplicación de correo…","toast.norec":"La voz no es compatible con este navegador","toast.try":"No pudimos captarlo — intenta de nuevo",
   }
 };
 
 /* ================= STATE ================= */
-const state = { lang:"en", mode:"type", route:null, grade:null, city:null, income:null };
+const state = { lang:"en", mode:"type", route:null, grade:null, school:"", city:"" };
 const screens = ["s-welcome","s-how","s-route","s-student","s-school","s-parent","s-extras","s-agree","s-deliver","s-done"];
 let cur = 0;
 const $ = id => document.getElementById(id);
 
-/* ================= i18n render ================= */
+/* ================= i18n ================= */
 function applyI18n(){
   const d = I18N[state.lang];
-  document.querySelectorAll("[data-i18n]").forEach(el => { el.textContent = d[el.dataset.i18n] || el.textContent; });
-  document.querySelectorAll("[data-i18n-html]").forEach(el => { el.innerHTML = d[el.dataset.i18nHtml] || el.innerHTML; });
-  document.querySelectorAll("[data-i18n-ph]").forEach(el => { el.placeholder = d[el.dataset.i18nPh] || el.placeholder; });
+  document.querySelectorAll("[data-i18n]").forEach(el=>{ el.textContent = d[el.dataset.i18n] || el.textContent; });
+  document.querySelectorAll("[data-i18n-html]").forEach(el=>{ el.innerHTML = d[el.dataset.i18nHtml] || el.innerHTML; });
+  document.querySelectorAll("[data-i18n-ph]").forEach(el=>{ el.placeholder = d[el.dataset.i18nPh] || el.placeholder; });
+  aiRenderChips();
 }
 
-/* ================= navigation ================= */
+/* ================= navigation (with question-by-question stagger) ================= */
 function goTo(idx){
-  if(idx < 0 || idx >= screens.length) return;
-  const from = $(screens[cur]); const to = $(screens[idx]);
-  from.classList.remove("active"); from.classList.add("exit");
-  setTimeout(()=>{ from.classList.remove("exit"); from.classList.remove("active"); }, 300);
+  if(idx<0||idx>=screens.length) return;
+  const from=$(screens[cur]), to=$(screens[idx]);
+  from.classList.remove("active","anim-in");
   to.classList.add("active");
-  cur = idx;
-  updateProgress();
-  if(idx === 7) renderAgreement();
-  if(idx === 8) renderDelivery();
+  // restart stagger animation
+  to.classList.remove("anim-in"); void to.offsetWidth; to.classList.add("anim-in");
+  cur=idx; updateProgress();
+  if(idx===7) renderAgreement();
+  if(idx===8) renderDelivery();
   window.scrollTo({top:0,behavior:"smooth"});
 }
 function updateProgress(){
-  const pct = Math.round(((cur) / (screens.length-1)) * 100);
-  $("progFill").style.width = pct + "%";
-  $("progPct").textContent = pct + "%";
+  const pct=Math.round((cur/(screens.length-1))*100);
+  $("progFill").style.width=pct+"%";
 }
 
 /* ================= toast ================= */
 let toastT;
-function toast(msg){
-  const t = $("toast"); t.textContent = msg; t.classList.add("show");
-  clearTimeout(toastT); toastT = setTimeout(()=> t.classList.remove("show"), 2400);
-}
+function toast(msg){ const t=$("toast"); t.textContent=msg; t.classList.add("show"); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove("show"),2400); }
 
 /* ================= language ================= */
-document.querySelectorAll("#langSwitcher button").forEach(b=>{
-  b.addEventListener("click", ()=>{
-    document.querySelectorAll("#langSwitcher button").forEach(x=>x.classList.remove("on"));
-    b.classList.add("on");
-    state.lang = b.dataset.lang;
-    // sync welcome tiles
-    setWelcomeLang(state.lang);
-    applyI18n();
-  });
-});
-function setWelcomeLang(l){
-  $("langEn").classList.toggle("selected", l==="en");
-  $("langEs").classList.toggle("selected", l==="es");
+function setLang(l){
+  state.lang=l;
+  document.querySelectorAll("#langSwitcher button").forEach(x=>x.classList.toggle("on",x.dataset.lang===l));
+  $("langEn").classList.toggle("selected",l==="en");
+  $("langEs").classList.toggle("selected",l==="es");
+  applyI18n();
 }
-$("langEn").addEventListener("click", ()=> { setWelcomeLang("en"); });
-$("langEs").addEventListener("click", ()=> { setWelcomeLang("es"); });
-$("goHow").addEventListener("click", ()=>{ state.lang = $("langEn").classList.contains("selected") ? "en":"es"; document.querySelectorAll("#langSwitcher button").forEach(x=>x.classList.toggle("on", x.dataset.lang===state.lang)); applyI18n(); goTo(1); });
+document.querySelectorAll("#langSwitcher button").forEach(b=>b.addEventListener("click",()=>setLang(b.dataset.lang)));
+$("langEn").addEventListener("click",()=>setLang("en"));
+$("langEs").addEventListener("click",()=>setLang("es"));
+$("goHow").addEventListener("click",()=>goTo(1));
 
 /* ================= mode ================= */
-function setMode(m){
-  state.mode = m;
-  $("modeType").classList.toggle("selected", m==="type");
-  $("modeVoice").classList.toggle("selected", m==="voice");
-  $("routeVoiceBtn").style.display = (m==="voice") ? "flex" : "none";
-}
-$("modeType").addEventListener("click", ()=> setMode("type"));
-$("modeVoice").addEventListener("click", ()=> setMode("voice"));
-$("howBack").addEventListener("click", ()=> goTo(0));
-$("goRoute").addEventListener("click", ()=> goTo(2));
+function setMode(m){ state.mode=m; $("modeType").classList.toggle("selected",m==="type"); $("modeVoice").classList.toggle("selected",m==="voice"); $("routeVoiceBtn").style.display=(m==="voice")?"flex":"none"; }
+$("modeType").addEventListener("click",()=>setMode("type"));
+$("modeVoice").addEventListener("click",()=>setMode("voice"));
+$("howBack").addEventListener("click",()=>goTo(0));
+$("goRoute").addEventListener("click",()=>goTo(2));
 
 /* ================= routing ================= */
-function selectRoute(r){
-  state.route = r;
-  document.querySelectorAll("#routeOpts .opt").forEach(o=> o.classList.toggle("selected", o.dataset.route===r));
-  $("goStudent").disabled = false;
-}
-document.querySelectorAll("#routeOpts .opt").forEach(o=>{
-  o.addEventListener("click", ()=>{ selectRoute(o.dataset.route); $("routeEcho").classList.remove("show"); });
-});
-$("routeBack").addEventListener("click", ()=> goTo(1));
-$("goStudent").addEventListener("click", ()=> goTo(3));
+function selectRoute(r){ state.route=r; document.querySelectorAll("#routeOpts .opt").forEach(o=>o.classList.toggle("selected",o.dataset.route===r)); $("goStudent").disabled=false; }
+document.querySelectorAll("#routeOpts .opt").forEach(o=>o.addEventListener("click",()=>{ selectRoute(o.dataset.route); $("routeEcho").classList.remove("show"); }));
+$("routeBack").addEventListener("click",()=>goTo(1));
+$("goStudent").addEventListener("click",()=>goTo(3));
 
-/* ---- voice routing with echo+confirm ---- */
-const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
-let rec = null;
-function fuzzyRoute(text){
-  const t = text.toLowerCase();
-  if(/peace|stamford/.test(t)) return "peace";
-  if(/school|community|teacher|referral|counselor|maestro|escuela|comunidad/.test(t)) return "school";
-  if(/not sure|don't know|unsure|no se|no sé|nose|no estoy/.test(t)) return "unsure";
-  if(/beyond|academic|limit|programa|program/.test(t)) return "academic";
-  return null;
-}
-const routeLabels = { academic:"a1t", peace:"a2t", school:"a3t", unsure:"a4t" };
-$("routeVoiceBtn").addEventListener("click", ()=>{
-  if(!SpeechRec){ toast("Voice input isn't supported in this browser"); return; }
-  if(!rec) rec = new SpeechRec();
-  rec.lang = state.lang === "es" ? "es-ES" : "en-US";
-  rec.interimResults = false; rec.maxAlternatives = 1;
+/* voice routing echo+confirm */
+const SpeechRec = window.SpeechRecognition||window.webkitSpeechRecognition;
+let rec=null;
+function fuzzyRoute(text){ const t=text.toLowerCase();
+  if(/peace|stamford/.test(t))return "peace";
+  if(/school|community|teacher|counselor|referral|escuela|comunidad|maestro/.test(t))return "school";
+  if(/not sure|don't know|unsure|no se|no sé|no estoy/.test(t))return "unsure";
+  if(/beyond|academic|limit|programa|program/.test(t))return "academic";
+  return null; }
+$("routeVoiceBtn").addEventListener("click",()=>{
+  if(!SpeechRec){ toast(I18N[state.lang]["toast.norec"]); return; }
+  if(!rec) rec=new SpeechRec();
+  rec.lang = state.lang==="es"?"es-ES":"en-US"; rec.interimResults=false; rec.maxAlternatives=1;
   $("routeVoiceBtn").classList.add("recording");
-  rec.onresult = (e)=>{
-    $("routeVoiceBtn").classList.remove("recording");
-    const heard = e.results[0][0].transcript;
-    const r = fuzzyRoute(heard);
-    if(r){
-      state.pendingRoute = r;
-      $("routeHeard").textContent = `“${heard}”`;
-      $("routeEcho").classList.add("show");
-      // pre-highlight the matched option visually
-      document.querySelectorAll("#routeOpts .opt").forEach(o=> o.classList.toggle("selected", o.dataset.route===r));
-    } else {
-      toast(state.lang==="es" ? "No pudimos reconocerlo, intenta de nuevo" : "We couldn't recognize that — try again");
-    }
-  };
-  rec.onerror = ()=>{ $("routeVoiceBtn").classList.remove("recording"); };
-  rec.onend = ()=>{ $("routeVoiceBtn").classList.remove("recording"); };
+  rec.onresult=(e)=>{ $("routeVoiceBtn").classList.remove("recording"); const heard=e.results[0][0].transcript; const r=fuzzyRoute(heard);
+    if(r){ state.pendingRoute=r; $("routeHeard").textContent=`“${heard}”`; $("routeEcho").classList.add("show");
+      document.querySelectorAll("#routeOpts .opt").forEach(o=>o.classList.toggle("selected",o.dataset.route===r)); }
+    else toast(I18N[state.lang]["toast.try"]); };
+  rec.onerror=rec.onend=()=>$("routeVoiceBtn").classList.remove("recording");
   rec.start();
 });
-$("routeConfirm").addEventListener("click", ()=>{ selectRoute(state.pendingRoute); $("routeEcho").classList.remove("show"); });
-$("routeRedo").addEventListener("click", ()=>{ $("routeEcho").classList.remove("show"); $("routeVoiceBtn").click(); });
+$("routeConfirm").addEventListener("click",()=>{ selectRoute(state.pendingRoute); $("routeEcho").classList.remove("show"); });
+$("routeRedo").addEventListener("click",()=>{ $("routeEcho").classList.remove("show"); $("routeVoiceBtn").click(); });
 
 /* ================= student ================= */
-document.querySelectorAll("#gradeOpts .tile").forEach(t=>{
-  t.addEventListener("click", ()=>{
-    state.grade = t.dataset.grade;
-    document.querySelectorAll("#gradeOpts .tile").forEach(x=>x.classList.toggle("selected", x===t));
-  });
-});
-$("studentBack").addEventListener("click", ()=> goTo(2));
-$("goSchool").addEventListener("click", ()=> goTo(4));
+document.querySelectorAll("#gradeOpts .tile").forEach(t=>t.addEventListener("click",()=>{ state.grade=parseInt(t.dataset.grade); document.querySelectorAll("#gradeOpts .tile").forEach(x=>x.classList.toggle("selected",x===t)); }));
+$("studentBack").addEventListener("click",()=>goTo(2));
+$("goSchool").addEventListener("click",()=>goTo(4));
 
-/* ================= school ================= */
-document.querySelectorAll("#cityOpts .tile").forEach(t=>{
-  t.addEventListener("click", ()=>{
-    state.city = t.dataset.city;
-    document.querySelectorAll("#cityOpts .tile").forEach(x=>x.classList.toggle("selected", x===t));
+/* ================= generic suggest component ================= */
+function attachSuggest(input, menu, getItems){
+  let items=[], hl=-1;
+  function render(){
+    const q=input.value.trim();
+    items=getItems(q);
+    if(!q || !items.length){ menu.classList.remove("open"); menu.innerHTML=""; return; }
+    menu.innerHTML=items.map((it,i)=>`<button type="button" class="sg${i===hl?' hl':''}" data-i="${i}">${it.html}</button>`).join("");
+    menu.classList.add("open");
+  }
+  input.addEventListener("input",()=>{ hl=-1; render(); });
+  input.addEventListener("keydown",(e)=>{
+    if(!menu.classList.contains("open")) return;
+    if(e.key==="ArrowDown"){ e.preventDefault(); hl=Math.min(hl+1,items.length-1); }
+    else if(e.key==="ArrowUp"){ e.preventDefault(); hl=Math.max(hl-1,0); }
+    else if(e.key==="Enter"){ e.preventDefault(); const i=hl>=0?hl:0; if(items[i]) pick(items[i]); return; }
+    else if(e.key==="Escape"){ menu.classList.remove("open"); return; }
+    else return;
+    menu.querySelectorAll(".sg").forEach((s,i)=>s.classList.toggle("hl",i===hl));
+    if(hl>=0) menu.querySelectorAll(".sg")[hl].scrollIntoView({block:"nearest"});
   });
-});
-$("schoolBack").addEventListener("click", ()=> goTo(3));
-$("goParent").addEventListener("click", ()=> goTo(5));
+  menu.addEventListener("mousedown",(e)=>{ e.preventDefault(); const b=e.target.closest(".sg"); if(b) pick(items[+b.dataset.i]); });
+  document.addEventListener("click",(e)=>{ if(e.target!==input && !menu.contains(e.target)) menu.classList.remove("open"); });
+  function pick(it){ input.value=it.value; menu.classList.remove("open"); input.dispatchEvent(new Event("input",{bubbles:true})); if(it.onPick) it.onPick(); }
+  return { close:()=>menu.classList.remove("open") };
+}
+const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const schoolIcon='<span class="sic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-4h6v4"/></svg></span>';
+const mailIcon='<span class="sic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></span>';
+const globeIcon='<span class="sic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9M12 3c-2.5 2.6-3.8 5.6-3.8 9s1.3 6.4 3.8 9"/></svg></span>';
 
-/* ================= parent ================= */
-$("parentBack").addEventListener("click", ()=> goTo(4));
-$("goExtras").addEventListener("click", ()=> goTo(6));
-
-/* ================= extras ================= */
-document.querySelectorAll("#incomeOpts .opt").forEach(o=>{
-  o.addEventListener("click", ()=>{
-    state.income = o.dataset.income;
-    document.querySelectorAll("#incomeOpts .opt").forEach(x=>x.classList.toggle("selected", x===o));
-  });
+/* ---- SCHOOL autocomplete (grade-aware) ---- */
+attachSuggest($("schoolName"), $("schoolSuggest"), (q)=>{
+  const ql=q.toLowerCase();
+  const g=state.grade;
+  let pool=SCHOOLS.filter(s=>s.n.toLowerCase().includes(ql));
+  if(g){ const inG=pool.filter(s=>g>=s.lo&&g<=s.hi); const outG=pool.filter(s=>!(g>=s.lo&&g<=s.hi)); pool=inG.concat(outG); }
+  return pool.slice(0,7).map(s=>({
+    value:s.n,
+    html:`${schoolIcon}<span><b>${esc(s.n)}</b>${(s.c||s.st)?`<small>${esc([s.c,s.st].filter(Boolean).join(", "))} · Grades ${s.lo}–${s.hi}</small>`:`<small>Grades ${s.lo}–${s.hi}</small>`}</span><span class="kbd">↵</span>`,
+    onPick:()=>{ state.school=s.n; if(s.c && !$("cityInput").value){ $("cityInput").value=s.c; state.city=s.c; } }
+  }));
 });
-$("extrasBack").addEventListener("click", ()=> goTo(5));
-$("skipExtras").addEventListener("click", ()=> goTo(7));
-$("goAgree").addEventListener("click", ()=> goTo(7));
+
+/* ---- CITY autocomplete ---- */
+attachSuggest($("cityInput"), $("citySuggest"), (q)=>{
+  const ql=q.toLowerCase();
+  return CITIES.filter(c=>c.toLowerCase().startsWith(ql)).slice(0,5).map(c=>({ value:c, html:`${schoolIcon}<span><b>${esc(c)}</b></span><span class="kbd">↵</span>`, onPick:()=>{ state.city=c; } }));
+});
+
+/* ---- EMAIL domain autocomplete ---- */
+attachSuggest($("pEmail"), $("emailSuggest"), (q)=>{
+  const at=q.indexOf("@");
+  if(at<0) return [];
+  const local=q.slice(0,at), dom=q.slice(at+1).toLowerCase();
+  if(!local) return [];
+  return EMAIL_DOMAINS.filter(d=>d.startsWith(dom)).slice(0,5).map(d=>({ value:`${local}@${d}`, html:`${mailIcon}<span><b>${esc(local)}@${d}</b></span><span class="kbd">↵</span>` }));
+});
+
+/* ---- LANGUAGE autocomplete ---- */
+attachSuggest($("xLang"), $("langSuggest"), (q)=>{
+  const ql=q.toLowerCase();
+  return LANGUAGES.filter(l=>l.toLowerCase().includes(ql)).slice(0,7).map(l=>({ value:l, html:`${globeIcon}<span><b>${esc(l)}</b></span><span class="kbd">↵</span>` }));
+});
+
+/* ================= school/parent/extras nav ================= */
+$("schoolBack").addEventListener("click",()=>goTo(3));
+$("goParent").addEventListener("click",()=>goTo(5));
+$("parentBack").addEventListener("click",()=>goTo(4));
+$("goExtras").addEventListener("click",()=>goTo(6));
+$("extrasBack").addEventListener("click",()=>goTo(5));
+$("skipExtras").addEventListener("click",()=>goTo(7));
+$("goAgree").addEventListener("click",()=>goTo(7));
+document.querySelectorAll("#incomeOpts .opt").forEach(o=>o.addEventListener("click",()=>{ document.querySelectorAll("#incomeOpts .opt").forEach(x=>x.classList.toggle("selected",x===o)); }));
 
 /* ================= agreement ================= */
 function agreementHTML(){
-  const routeNames = {
-    academic: "Beyond Limits Academic Program",
-    peace: "Stamford Peace Youth referral",
-    school: "School / community referral",
-    unsure: "Beyond Limits Academic Program"
-  };
-  const prog = routeNames[state.route] || "Beyond Limits Academic Program";
-  return `
-    <h4>Welcome to ${prog}</h4>
-    <p>We're glad you're here. This agreement describes how we'll work together to help your student succeed.</p>
-    <h4>Program goals</h4>
-    <p>To provide quality academic support, which may include:</p>
-    <ul>
-      <li>An environment free from distraction and negative peer influences, conducive to successful completion of schoolwork.</li>
-      <li>One-on-one tutoring and informal mentoring focused on understanding material and building confidence.</li>
-    </ul>
-    <h4>Commitment</h4>
-    <p>Participants are expected to maintain consistency in scheduling sessions, with a minimum commitment of at least one to two sessions per week.</p>
-    <p>Beyond Limits is not a test or exam prep program; our focus is on fostering a deeper understanding of material and concepts for holistic learning. Just as we are committed to supporting students' growth, we ask families to commit to regular participation. Failure to maintain consistent scheduling may result in dismissal from the program.</p>
-    <h4>Our philosophy</h4>
-    <p>"Continuous effort — not strength or intelligence — is the key to unlocking our potential." — Winston Churchill</p>
-    <p>"Your attitude, not your aptitude, will determine your altitude." — Zig Ziglar</p>
-    <span class="legal-note">This is a summary for your review. The full legal agreement (including the Academic Release and PowerSchool consent) will be emailed and displayed as a QR code in the next step. Versión en español disponible próximamente — actualmente en revisión humana.</span>
-  `;
+  const routeNames={academic:"Beyond Limits Academic Program",peace:"Stamford Peace Youth referral",school:"School / community referral",unsure:"Beyond Limits Academic Program"};
+  const prog=routeNames[state.route]||"Beyond Limits Academic Program";
+  return `<h4>Welcome to ${prog}</h4><p>We're glad you're here. This agreement describes how we'll work together to help your student succeed.</p>
+  <h4>Program goals</h4><p>To provide quality academic support, which may include:</p><ul><li>An environment free from distraction and negative peer influences, conducive to successful completion of schoolwork.</li><li>One-on-one tutoring and informal mentoring focused on understanding material and building confidence.</li></ul>
+  <h4>Commitment</h4><p>Participants are expected to maintain consistency in scheduling sessions, with a minimum commitment of at least one to two sessions per week.</p><p>Beyond Limits is not a test or exam prep program; our focus is on fostering a deeper understanding of material and concepts for holistic learning. Just as we are committed to supporting students' growth, we ask families to commit to regular participation. Failure to maintain consistent scheduling may result in dismissal from the program.</p>
+  <h4>Our philosophy</h4><p>"Continuous effort — not strength or intelligence — is the key to unlocking our potential." — Winston Churchill</p><p>"Your attitude, not your aptitude, will determine your altitude." — Zig Ziglar</p>
+  <span class="legal-note">This is a summary for your review. The full legal agreement (including the Academic Release and PowerSchool consent) will be emailed and shown as a QR code in the next step. Versión en español disponible próximamente — actualmente en revisión humana.</span>`;
 }
-function renderAgreement(){ $("agreeBox").innerHTML = agreementHTML(); }
-
-/* acknowledge toggles */
-["ackSched","ackPower","ackCert"].forEach(id=>{
-  $(id).addEventListener("click", ()=>{ $(id).classList.toggle("on"); checkAgreeReady(); });
-});
-function checkAgreeReady(){
-  const all = ["ackSched","ackPower","ackCert"].every(id => $(id).classList.contains("on"));
-  const sigs = $("stuSig").value.trim() && $("parSig").value.trim();
-  $("goDeliver").disabled = !(all && sigs);
-}
-["stuSig","parSig"].forEach(id=> $(id).addEventListener("input", checkAgreeReady));
-$("agreeBack").addEventListener("click", ()=> goTo(6));
-$("goDeliver").addEventListener("click", ()=> goTo(8));
+function renderAgreement(){ $("agreeBox").innerHTML=agreementHTML(); }
+["ackSched","ackPower","ackCert"].forEach(id=>$(id).addEventListener("click",()=>{ $(id).classList.toggle("on"); checkAgreeReady(); }));
+function checkAgreeReady(){ const all=["ackSched","ackPower","ackCert"].every(id=>$(id).classList.contains("on")); const sigs=$("stuSig").value.trim()&&$("parSig").value.trim(); $("goDeliver").disabled=!(all&&sigs); }
+["stuSig","parSig"].forEach(id=>$(id).addEventListener("input",checkAgreeReady));
+$("agreeBack").addEventListener("click",()=>goTo(6));
+$("goDeliver").addEventListener("click",()=>goTo(8));
 
 /* ================= delivery ================= */
-function renderDelivery(){
-  const email = $("pEmail").value.trim() || "";
-  $("dEmailInput").value = email;
-  $("dEmail").textContent = email || "your email";
-  const url = CONFIG.agreements[state.route] || CONFIG.agreements.academic;
-  $("qrBox").innerHTML = QR_SVGS[state.route] || QR_SVGS.academic;
-  $("qrBox").dataset.url = url;
-}
-function copyText(t){
-  if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(t); }
-  else { const ta=document.createElement("textarea"); ta.value=t; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); ta.remove(); }
-}
-$("sendEmail").addEventListener("click", ()=>{
-  const to = $("dEmailInput").value.trim();
-  const url = $("qrBox").dataset.url;
+function renderDelivery(){ const email=$("pEmail").value.trim()||""; $("dEmailInput").value=email; $("dEmail").textContent=email||"your email";
+  $("qrBox").innerHTML=QR_SVGS[state.route]||QR_SVGS.academic; $("qrBox").dataset.url=CONFIG.agreements[state.route]||CONFIG.agreements.academic; }
+function copyText(t){ if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(t); else { const ta=document.createElement("textarea"); ta.value=t; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); ta.remove(); } }
+$("sendEmail").addEventListener("click",()=>{ const to=$("dEmailInput").value.trim(); const url=$("qrBox").dataset.url;
   if(!to){ toast("Please enter your email first"); return; }
-  const subject = encodeURIComponent("Your Beyond Limits agreement");
-  const body = encodeURIComponent(`Hello,\n\nHere is your Beyond Limits enrollment agreement:\n${url}\n\nThank you,\nBeyond Limits Academics`);
-  window.location.href = `mailto:${to}?subject=${subject}&body=${body}`;
-  toast(I18N[state.lang]["toast.sent"]);
-});
-$("copyLink").addEventListener("click", ()=>{
-  copyText($("qrBox").dataset.url);
-  toast(I18N[state.lang]["toast.copied"]);
-});
-$("deliverBack").addEventListener("click", ()=> goTo(7));
-$("goDone").addEventListener("click", ()=>{
-  $("doneEmail").textContent = $("dEmailInput").value.trim() || "your email";
-  goTo(9);
-});
+  const subject=encodeURIComponent("Your Beyond Limits agreement");
+  const body=encodeURIComponent(`Hello,\n\nHere is your Beyond Limits enrollment agreement:\n${url}\n\nThank you,\nBeyond Limits Academics`);
+  window.location.href=`mailto:${to}?subject=${subject}&body=${body}`; toast(I18N[state.lang]["toast.sent"]); });
+$("copyLink").addEventListener("click",()=>{ copyText($("qrBox").dataset.url); toast(I18N[state.lang]["toast.copied"]); });
+$("deliverBack").addEventListener("click",()=>goTo(7));
+$("goDone").addEventListener("click",()=>{ $("doneEmail").textContent=$("dEmailInput").value.trim()||"your email"; goTo(9); });
+$("restart").addEventListener("click",()=>location.reload());
 
-/* ================= restart ================= */
-$("restart").addEventListener("click", ()=> location.reload());
+/* ================= AI ASSISTANT ================= */
+const aiDrawer=$("aiDrawer"), aiOverlay=$("aiOverlay"), aiBody=$("aiBody"), aiInput=$("aiInput");
+let aiOpen=false, aiGreeted=false;
+const AI_KB=[
+ {k:["cost","free","pay","price","fee","sliding","afford","much","money","income","costo","gratis","precio","pagar"],a:"Beyond Limits is <b>free or very low cost</b>. Fees are on a sliding scale for families eligible for free/reduced lunch — cost should never be a reason to skip this. We won't ask you to prove income to enroll."},
+ {k:["grade","grades","age","old","year","grado","año"],a:"We serve students in <b>grades 4 through 10</b>. If your student is a bit outside that range, reach out and we'll see if we can still help."},
+ {k:["subject","math","science","english","tutor","help with","materia","matemáticas","ciencias"],a:"We focus on <b>math and science</b>, one-on-one, plus informal mentoring. The goal is understanding and confidence, not just finishing homework."},
+ {k:["agreement","sign","paperwork","contract","legal","acuerdo","firmar"],a:"The agreement just sets out how we'll work together — program goals, weekly commitment, and a release so we can view your student's school records. It's short, and you'll get a copy by email with a QR code."},
+ {k:["powerschool","portal","records","release","transcript"],a:"The PowerSchool parent consent form lets our tutors see your student's grades and assignments so they can actually help. It's a separate short form — we'll email you the link."},
+ {k:["email","qr","send","receive","code","correo","código"],a:"On the delivery step we <b>email you</b> the agreement link and a QR code, so you can finish it on your phone whenever works — no need to do it all right now."},
+ {k:["language","spanish","español","translate","bilingual","idioma"],a:"You can switch the whole form between <b>English and Español</b> with the toggle at the top. The legal agreement text is currently in English while our Spanish translation is reviewed by a human."},
+ {k:["privacy","data","share","information","confidential","datos","privado"],a:"Everything you share is <b>private and confidential</b>. Demographic answers are only shared in aggregate with funders — never tied to your name."},
+ {k:["voice","speak","talk","microphone","mic","voz","hablar"],a:"You can answer by voice! Choose <b>“Speak my answers”</b> on the second screen, then tap the microphone button. We'll always read back what we heard so you can confirm."},
+ {k:["where","location","address","meet","session","stamford","norwalk","dónde"],a:"Sessions happen in the <b>Stamford / lower Fairfield County</b> area, usually at a school or community site. We'll confirm the exact location when we follow up with you."},
+ {k:["long","time","minutes","how many","tarda","tiempo"],a:"This whole enrollment takes about <b>4 minutes</b>. Each screen is just one or two questions, and you can go back anytime."},
+ {k:["help","human","person","contact","someone","ayuda","persona","contactar"],a:"You can always reach a real person at <a href='mailto:info@beyondlimitsacademics.org' style='color:var(--navy);font-weight:700'>info@beyondlimitsacademics.org</a>. We're happy to walk you through this form too."},
+ {k:["start","begin","how do i","first","comenzar","empezar"],a:"Just hit <b>“Let's begin”</b> on the first screen. We'll guide you one short question at a time — language, a bit about your student, how to reach you, then one short agreement."},
+];
+const AI_FALLBACK={en:"Good question. I can help with cost, grades, subjects, the agreement, privacy, voice answers, and next steps. For anything else, a real person is at info@beyondlimitsacademics.org.",es:"Buena pregunta. Puedo ayudarte con costo, grados, materias, el acuerdo, privacidad y próximos pasos. Para otra cosa, escribe a info@beyondlimitsacademics.org."};
+const AI_CHIPS={en:["How much does it cost?","What grades do you serve?","What subjects?","Is my info private?","What happens next?"],es:["¿Cuánto cuesta?","¿Qué grados atienden?","¿Qué materias?","¿Mi información es privada?","¿Qué sigue?"]};
 
-/* ================= help ================= */
-$("helpBtn").addEventListener("click", ()=> $("helpSheet").classList.toggle("open"));
-$("helpClose").addEventListener("click", ()=> $("helpSheet").classList.remove("open"));
+function aiRenderChips(){ const chips=AI_CHIPS[state.lang]; $("aiChips").innerHTML=chips.map(c=>`<button>${c}</button>`).join("");
+  $("aiChips").querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{ aiInput.value=b.textContent; aiSend.click(); })); }
+function aiMsg(html,who){ const d=document.createElement("div"); d.className="msg "+who; d.innerHTML=html; aiBody.appendChild(d); aiBody.scrollTop=aiBody.scrollHeight; }
+function aiTyping(on){ let t=$("aiTyping"); if(on){ if(!t){ t=document.createElement("div"); t.id="aiTyping"; t.className="typing"; t.innerHTML="<span></span><span></span><span></span>"; aiBody.appendChild(t); aiBody.scrollTop=aiBody.scrollHeight; } } else if(t) t.remove(); }
+function aiAnswer(q){
+  const ql=q.toLowerCase();
+  for(const item of AI_KB){ if(item.k.some(k=>ql.includes(k))) return item.a; }
+  return AI_FALLBACK[state.lang];
+}
+function aiGreet(){
+  if(aiGreeted) return; aiGreeted=true;
+  const g=state.lang==="es"?"¡Hola! Soy tu asistente de inscripción. Puedo ayudarte con el costo, los grados, el acuerdo o cualquier paso del formulario. ¿En qué te ayudo?":"Hi! I'm your enrollment assistant. I can help with cost, grades, the agreement, or any step of this form. What can I help you with?";
+  aiMsg(g,"bot");
+}
+function toggleAI(force){
+  aiOpen = (typeof force==="boolean")?force:!aiOpen;
+  aiDrawer.classList.toggle("open",aiOpen); aiOverlay.classList.toggle("show",aiOpen); $("aiToggle").classList.toggle("on",aiOpen);
+  if(aiOpen){ aiGreet(); setTimeout(()=>aiInput.focus(),250); }
+}
+$("aiToggle").addEventListener("click",()=>toggleAI());
+$("aiClose").addEventListener("click",()=>toggleAI(false));
+$("aiOverlay").addEventListener("click",()=>toggleAI(false));
+function aiSubmit(){ const q=aiInput.value.trim(); if(!q) return; aiMsg(esc(q),"user"); aiInput.value=""; aiTyping(true);
+  setTimeout(()=>{ aiTyping(false); aiMsg(aiAnswer(q),"bot"); }, 600+Math.random()*500); }
+$("aiSend").addEventListener("click",aiSubmit);
+aiInput.addEventListener("keydown",(e)=>{ if(e.key==="Enter") aiSubmit(); });
 
 /* ================= init ================= */
 applyI18n();
 updateProgress();
 setMode("type");
+document.getElementById("s-welcome").classList.add("anim-in");
 </script>
 
 </body>
